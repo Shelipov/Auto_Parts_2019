@@ -1,0 +1,44 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <UserSecretsId>aspnet-Auto_Parts_2019-542ACF63-3423-49EC-903A-29D956C98147</UserSecretsId>
+    <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Data\Migrations\00000000000000_CreateIdentitySchema.cs" />
+    <Compile Remove="Data\Migrations\00000000000000_CreateIdentitySchema.Designer.cs" />
+    <Compile Remove="Data\Migrations\20181115203918_AddContext.cs" />
+    <Compile Remove="Data\Migrations\20181115203918_AddContext.Designer.cs" />
+    <Compile Remove="Data\Migrations\20181115204120_AddContext1.cs" />
+    <Compile Remove="Data\Migrations\20181115204120_AddContext1.Designer.cs" />
+    <Compile Remove="Data\Migrations\20181115210313_AddContext.cs" />
+    <Compile Remove="Data\Migrations\20181115210313_AddContext.Designer.cs" />
+    <Compile Remove="Data\Migrations\20181115210555_AddContext.cs" />
+    <Compile Remove="Data\Migrations\20181115210555_AddContext.Designer.cs" />
+    <Compile Remove="Data\Migrations\20181208142839_First.cs" />
+    <Compile Remove="Data\Migrations\20181208142839_First.Designer.cs" />
+    <Compile Remove="Data\Migrations\20181215141507_UpdateDB.cs" />
+    <Compile Remove="Data\Migrations\20181215141507_UpdateDB.Designer.cs" />
+    <Compile Remove="Data\Migrations\20181216134212_part.cs" />
+    <Compile Remove="Data\Migrations\20181216134212_part.Designer.cs" />
+    <Compile Remove="Data\Migrations\20181224162319_Cros.cs" />
+    <Compile Remove="Data\Migrations\20181224162319_Cros.Designer.cs" />
+    <Compile Remove="Data\Migrations\20181230151107_FirstSQL.cs" />
+    <Compile Remove="Data\Migrations\20181230151107_FirstSQL.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="1.50.5" />
+    <PackageReference Include="MailKit" Version="2.1.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.1" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Areas\Identity\Services\" />
+    <Folder Include="Data\Migrations\" />
+  </ItemGroup>
+
+</Project>

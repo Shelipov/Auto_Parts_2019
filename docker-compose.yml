@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  auto_parts_2019:
+    image: ${DOCKER_REGISTRY}autoparts2019
+    build:
+      context: .
+      dockerfile: Auto_Parts_2019/Dockerfile

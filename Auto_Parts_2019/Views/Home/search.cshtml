@@ -1,0 +1,112 @@
+﻿@model IEnumerable<Auto_Parts_2019.Models.Parts.Part>
+
+@{
+    ViewData["Title"] = "search";
+}
+@using Microsoft.AspNetCore.Identity
+@using Auto_Parts_2019.Helpers
+@inject UserManager<IdentityUser> UserManager
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        
+        <link href="simplebox.css" rel="stylesheet">
+    </head>
+
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    <h3>Номер</h3>
+                </th>
+                <th>
+                    <h3>Описание</h3>
+                </th>
+                <th>
+                    <h3>Цена</h3>
+                </th>
+                <th>
+                    <h3>В наличии</h3>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Number)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Price)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Quantity)
+                    </td>
+                    <td>
+                        @if (item.Foto_link != null)
+                        {
+
+                        <td>
+                            <a rel="simplebox" href="~/images/Foto_Zimmermann/Foto_Zimmermann/@item.Foto_link.Replace(@"\",@"/").Replace(@"~/images/Foto_Zimmermann/Foto_Zimmermann/","").ToString()">
+                                <img src="~/images/Foto_Zimmermann/Foto_Zimmermann/@item.Foto_link.Replace(@"\",@"/").Replace(@"~/images/Foto_Zimmermann/Foto_Zimmermann/","").ToString()" class="img-responsive" width="150" height="150" />
+                            </a>
+
+                        </td>
+                    }
+                    else
+                    {
+                        <td>
+                            <a rel="simplebox" href="~/images/Foto_Zimmermann/Foto_Zimmermann/NoFoto.jpg">
+                                <img src="~/images/Foto_Zimmermann/Foto_Zimmermann/NoFoto.jpg" class="img-responsive" width="150" height="150" />
+                            </a>
+
+                        </td>
+
+                    }
+
+
+                        <td>
+                            <a asp-action="addtocart" asp-route-id="@item.ID,@UserManager.GetUserId(User)">В корзину</a>
+                        </td>
+                    </tr>
+                }
+        </tbody>
+    </table>
+    <div>
+        <a asp-controller="Home" asp-action="About">Поиск по каталогу</a>
+    </div>
+    <div>
+        <a asp-controller="Home" asp-action="Index">Назад</a>
+    </div>
+    <html>
+    <body>
+
+
+        <script type="text/javascript" src="~/simplebox.js"></script>
+        <script type="text/javascript">
+            (function () {
+                var boxes = [], els, i, l;
+                if (document.querySelectorAll) {
+                    els = document.querySelectorAll('a[rel=simplebox]');
+
+                    Box.getStyles('simplebox_css', 'simplebox.css');
+                    Box.getScripts('simplebox_js', 'simplebox.js', function () {
+                        simplebox.init();
+                        for (i = 0, l = els.length; i < l; ++i)
+                            simplebox.start(els[i]);
+                        simplebox.start('a[rel=simplebox_group]');
+                    });
+                }
+
+
+            })();
+        </script>
+    </body>
+</html>
+

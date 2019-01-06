@@ -1,0 +1,312 @@
+﻿@*@model IEnumerable<Auto_Parts_2019.Models.Parts.Part>*@
+@model IndexViewModel
+@{
+    ViewData["Title"] = "Home Page";
+}
+@using Microsoft.AspNetCore.Identity
+@using Auto_Parts_2019.Helpers
+@inject UserManager<IdentityUser> UserManager
+@inject SignInManager<IdentityUser> SignInManager
+@*@inject SignInManager<IdentityUser> SignInManager*@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title></title>
+    <link href="~/simplebox/simplebox.css" rel="stylesheet">
+</head>
+
+<center>
+    <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="6000">
+        <ol class="carousel-indicators">
+            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+            <li data-target="#myCarousel" data-slide-to="1"></li>
+            <li data-target="#myCarousel" data-slide-to="2"></li>
+            <li data-target="#myCarousel" data-slide-to="3"></li>
+            <li data-target="#myCarousel" data-slide-to="4"></li>
+            <li data-target="#myCarousel" data-slide-to="5"></li>
+            <li data-target="#myCarousel" data-slide-to="6"></li>
+            <li data-target="#myCarousel" data-slide-to="7"></li>
+
+        </ol>
+        <div class="carousel-inner" role="listbox">
+            <div class="item active">
+                <img src="~/images/baner0.jpg" alt="ASP.NET" class="img-responsive" />
+                <div class="carousel-caption" role="option">
+                    <p>
+                        Официальный представитель завода Otto-Zimmermann в Украимне.
+                        <a class="btn btn-default" href="https://www.otto-zimmermann.de/ru/">
+                            Узнать больше
+                        </a>
+                    </p>
+                </div>
+            </div>
+            <div class="item">
+                <img src="~/images/baner2.jpg" alt="Visual Studio" class="img-responsive" />
+                <div class="carousel-caption" role="option">
+                    <p>
+                        Наш ассортимент тормозных колодок состоит из более чем 1000 различных позиций
+                        <a class="btn btn-default" href="https://www.otto-zimmermann.de/ru/produktciia/tormoznye-kolodki/">
+                            Узнать больше
+                        </a>
+                    </p>
+                </div>
+            </div>
+            <div class="item">
+                <img src="~/images/baner1.jpg" alt="Microsoft Azure" class="img-responsive" />
+                <div class="carousel-caption" role="option">
+                    <p>
+                        Мы были очень рады Вашему посещению нашего стенда на выставке Автомеханика. Мы надеемся, что выставка была для Вас успешной.
+                        <a class="btn btn-default" href="https://www.otto-zimmermann.de/ru/novosti/automechanika-2018/">
+                            Узнать больше
+                        </a>
+                    </p>
+                </div>
+            </div>
+            <div class="item">
+                <img src="~/images/baner4.jpg" alt="Microsoft Azure" class="img-responsive" />
+                <div class="carousel-caption" role="option">
+                    <p>
+                        Линейка тормозных дисков FusionZ включает в себя исключительно составные диски.
+                        <a class="btn btn-default" href="https://www.otto-zimmermann.de/ru/produktciia/tormoznye-diski-fusionz/">
+                            Узнать больше
+                        </a>
+                    </p>
+                </div>
+            </div>
+            <div class="item">
+                <img src="~/images/baner5.jpg" alt="Microsoft Azure" class="img-responsive" />
+                <div class="carousel-caption" role="option">
+                    <p>
+                        Все диски Zimmermann линейки Sport имеют дополнительно обработанную тормозную поверхность.
+                        <a class="btn btn-default" href="https://www.otto-zimmermann.de/ru/produktciia/tormoznye-diski-sport/">
+                            Узнать больше
+                        </a>
+                    </p>
+                </div>
+            </div>
+            <div class="item">
+                <img src="~/images/baner6.jpg" alt="Microsoft Azure" class="img-responsive" />
+                <div class="carousel-caption" role="option">
+                    <p>
+                        Наша цель – обеспечить наших покупателей высококачественной продукцией на все времена.
+                        <a class="btn btn-default" href="https://www.otto-zimmermann.de/ru/produktciia/tormoznye-diski-standard/">
+                            Узнать больше
+                        </a>
+                    </p>
+                </div>
+            </div>
+            <div class="item">
+                <img src="~/images/baner7.jpg" alt="Microsoft Azure" class="img-responsive" />
+                <div class="carousel-caption" role="option">
+                    <p>
+                        Официальный представитель завода FREMAX в Украине.
+                        <a class="btn btn-default" href="http://fremax.ru/en">
+                            Узнать больше
+                        </a>
+                    </p>
+                </div>
+            </div>
+            <div class="item">
+                <img src="~/images/baner8.jpg" alt="Microsoft Azure" class="img-responsive" />
+                <div class="carousel-caption" role="option">
+                    <p>
+                        Официальный представитель завода FREMAX в Украине.
+                        <a class="btn btn-default" href="http://fremax.ru/en/brake-pads">
+                            Узнать больше
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+            <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+            <span class="sr-only">Назад</span>
+        </a>
+        <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+            <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+            <span class="sr-only">Вперед</span>
+        </a>
+    </div>
+</center>
+@*/////////////////////////////////////////////////////////////////*@
+<style>
+    .round {
+        /*border-radius: 100px; /* Радиус скругления */
+        /*border: 3px solid green; /* Параметры рамки */
+        /*box-shadow: 0 0 7px #666; /* Параметры тени */
+        position: absolute;
+        top: 0;
+        left: 0;
+        /*width: 100%;
+                height: 100%;*/
+        z-index: 99999;
+        width: 100px;
+        height: 100px;
+        background-color: rgba(0,0,0,0.5); /*затемнитефон*/
+    }
+</style>
+@using (Html.BeginForm("search", "Home", FormMethod.Post))
+{
+    <center>
+
+        <div style="width: 650px;">
+            <form id="number" class="text-left" action="/search/" method="post" name="number">
+                <input id="number" style="width: 80%; padding: 10px 50px 10px 12px; font-size: 16px; border: 2px solid #6699cc; border-radius: 25px; background-color: #f8f8f8;" name="number" type="text" value="" placeholder="Поиск по номеру">
+                <button style="position: relative; padding: 5px; left: -71px; border: 2px solid #6699cc; border-radius: 20px; font-size: 16px; color: #fff; cursor: pointer; background: #6699cc;" title="Поиск" type="submit">Поиск</button>
+            </form>
+        </div>
+    </center>
+}
+<table class="table">
+    <thead>
+        <tr>
+
+            <th>
+                <h2>Номер</h2>  @*@Html.DisplayNameFor(model => model.Number)*@
+            </th>
+            <th>
+                <h2>Описание</h2>  @*@Html.DisplayNameFor(model => model.Description)*@
+            </th>
+            <th>
+                <h2>Цена</h2>  @*@Html.DisplayNameFor(model => model.Price)*@
+            </th>
+            <th>
+                <h2>Фото</h2>  @*@Html.DisplayNameFor(model => model.Foto_link)*@
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var item in Model.Parts)
+        {
+
+            <tr>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.Number)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price) грн.
+                </td>
+                @if (item.Foto_link != null)
+                {
+
+                    <td>
+                        <a rel="simplebox" href="~/images/Foto_Zimmermann/Foto_Zimmermann/@item.Foto_link.Replace(@"\",@"/").Replace(@"~/images/Foto_Zimmermann/Foto_Zimmermann/","").ToString()">
+                            <img src="~/images/Foto_Zimmermann/Foto_Zimmermann/@item.Foto_link.Replace(@"\",@"/").Replace(@"~/images/Foto_Zimmermann/Foto_Zimmermann/","").ToString()" class="img-responsive" width="150" height="150" />
+                        </a>
+
+                    </td>
+                }
+                else
+                {
+                    <td>
+                        <a rel="simplebox" href="~/images/Foto_Zimmermann/Foto_Zimmermann/NoFoto.jpg">
+                            <img src="~/images/Foto_Zimmermann/Foto_Zimmermann/NoFoto.jpg" class="img-responsive" width="150" height="150" />
+                        </a>
+
+                    </td>
+
+                }
+
+
+                <td>
+                    <a asp-action="addtocart" asp-route-id="@item.ID,@UserManager.GetUserId(User)">В корзину</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<div>
+    @if (Model.PageViewModel.HasPreviousPage)
+    {
+        <a asp-action="Index"
+           asp-route-page="@(Model.PageViewModel.PageNumber - 1)"
+           class="btn btn-default btn">
+            <i class="glyphicon glyphicon-chevron-left"></i>
+            Назад
+        </a>
+    }
+    @if (Model.PageViewModel.HasNextPage)
+    {
+        <a asp-action="Index"
+           asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
+           class="btn btn-default btn">
+            Вперед
+            <i class="glyphicon glyphicon-chevron-right"></i>
+        </a>
+    }
+</div>
+<div>
+    <a asp-controller="Home" asp-action="About">Поиск по каталогу</a>
+</div>
+<html>
+<body>
+
+
+    <script type="text/javascript" src="~/simplebox/simplebox.js"></script>
+    <script type="text/javascript">
+        (function () {
+            var boxes = [], els, i, l;
+            if (document.querySelectorAll) {
+                els = document.querySelectorAll('a[rel=simplebox]');
+
+                Box.getStyles('simplebox_css', '~/simplebox/simplebox.css');
+                Box.getScripts('simplebox_js', '~/simplebox/simplebox.js', function () {
+                    simplebox.init();
+                    for (i = 0, l = els.length; i < l; ++i)
+                        simplebox.start(els[i]);
+                    simplebox.start('a[rel=simplebox_group]');
+                });
+            }
+
+
+        })();
+    </script>
+</body>
+</html>
+@*/////////////////////////////////////////////////////////////////*@
+@*<div class="row">
+        <div class="col-md-3">
+            <h2>Application uses</h2>
+            <ul>
+                <li>Sample pages using ASP.NET Core MVC</li>
+                <li>Theming using <a href="https://go.microsoft.com/fwlink/?LinkID=398939">Bootstrap</a></li>
+            </ul>
+        </div>
+        <div class="col-md-3">
+            <h2>How to</h2>
+            <ul>
+                <li><a href="https://go.microsoft.com/fwlink/?LinkID=398600">Add a Controller and View</a></li>
+                <li><a href="https://go.microsoft.com/fwlink/?LinkId=699315">Manage User Secrets using Secret Manager.</a></li>
+                <li><a href="https://go.microsoft.com/fwlink/?LinkId=699316">Use logging to log a message.</a></li>
+                <li><a href="https://go.microsoft.com/fwlink/?LinkId=699317">Add packages using NuGet.</a></li>
+                <li><a href="https://go.microsoft.com/fwlink/?LinkId=699319">Target development, staging or production environment.</a></li>
+            </ul>
+        </div>
+        <div class="col-md-3">
+            <h2>Overview</h2>
+            <ul>
+                <li><a href="https://go.microsoft.com/fwlink/?LinkId=518008">Conceptual overview of what is ASP.NET Core</a></li>
+                <li><a href="https://go.microsoft.com/fwlink/?LinkId=699320">Fundamentals of ASP.NET Core such as Startup and middleware.</a></li>
+                <li><a href="https://go.microsoft.com/fwlink/?LinkId=398602">Working with Data</a></li>
+                <li><a href="https://go.microsoft.com/fwlink/?LinkId=398603">Security</a></li>
+                <li><a href="https://go.microsoft.com/fwlink/?LinkID=699321">Client side development</a></li>
+                <li><a href="https://go.microsoft.com/fwlink/?LinkID=699322">Develop on different platforms</a></li>
+                <li><a href="https://go.microsoft.com/fwlink/?LinkID=699323">Read more on the documentation site</a></li>
+            </ul>
+        </div>
+        <div class="col-md-3">
+            <h2>Run &amp; Deploy</h2>
+            <ul>
+                <li><a href="https://go.microsoft.com/fwlink/?LinkID=517851">Run your app</a></li>
+                <li><a href="https://go.microsoft.com/fwlink/?LinkID=517853">Run tools such as EF migrations and more</a></li>
+                <li><a href="https://go.microsoft.com/fwlink/?LinkID=398609">Publish to Microsoft Azure Web Apps</a></li>
+            </ul>
+        </div>
+    </div>*@
