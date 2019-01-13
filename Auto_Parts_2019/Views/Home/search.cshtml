@@ -73,7 +73,7 @@
 
 
                         <td>
-                            <a asp-action="addtocart" asp-route-id="@item.ID,@UserManager.GetUserId(User)">В корзину</a>
+                            <a asp-action="addtocart" asp-route-PartID="@item.ID" asp-route-UserID="@UserManager.GetUserId(User)">В корзину</a>
                         </td>
                     </tr>
                 }

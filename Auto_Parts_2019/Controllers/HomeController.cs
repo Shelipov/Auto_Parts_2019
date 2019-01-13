@@ -11,41 +11,63 @@ using System.IO;
 using Microsoft.EntityFrameworkCore;
 using Auto_Parts_2019.Helpers;
 using System.Text.RegularExpressions;
-
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using System.Security.Principal;
 
 namespace Auto_Parts_2019.Controllers
 {
     public class HomeController : Controller
     {
-        
+        private readonly SignInManager<IdentityUser> signInManager;
+        private readonly UserManager<IdentityUser> userManager;
         public ApplicationDbContext db;
         private Repository<Part> Repo;
         IPartsRepository repo;
-        public HomeController(ApplicationDbContext db,IPartsRepository _repo)
+        public HomeController(ApplicationDbContext db,IPartsRepository _repo, SignInManager<IdentityUser> _signInManager, UserManager<IdentityUser> _userManager)
         {
             this.db = db;
             repo = _repo;
             this.Repo = new Repository<Part>(this.db);
+            signInManager = _signInManager;
+            userManager = _userManager;
         }
 
         public  IActionResult Index(int page = 1)
         {
-            
-            return View(GetParts(page));
+            if (User.Identity.IsAuthenticated)
+            {
+                return View(GetParts(page,userManager.GetUserId(User)));
+            }
+            else
+                return View(GetParts(page));
 
+        }
+        
+        [Route("addtocart")]
+        public IActionResult AddToCart(int PartID, string UserID)
+        {
+            return View(AddParts(PartID, UserID));
+            //return View("AddToCart");
         }
         [Route("addtocart")]
-        public IActionResult AddToCart(int PartID, int UserID)
+        public IActionResult AddToCart(List<Order> orders)
         {
-
-            return View("Index");
+            
+            return View("AddToCart");
         }
+
         //[Route("search")]
         [HttpPost("search")]
         public IActionResult Search(string number)
         {
-            var num = Search_num(number);
-            return View(num);
+            if (User.Identity.IsAuthenticated)
+            {
+                return View(Search_num(number,userManager.GetUserId(User)));
+            }
+            else
+                return View(Search_num(number));
+            
         }
         [Route("partaddexel")]
         public IActionResult PartAddExel()
@@ -95,8 +117,47 @@ namespace Auto_Parts_2019.Controllers
                 number = number.Replace(str, "").ToUpper();
             }
 
-            return repo.GetParts(number);
+            var parts= repo.GetParts(number);
             
+            double course = Convert.ToDouble(repo.GetCourseEuro());
+            var disc = from i in db.DefaultDiscounts
+                       select i.TheDefaultDiscount;            
+                foreach (var i in parts)
+                {
+                    if (disc.FirstOrDefault() != 0)
+                        i.Price = (System.Math.Round((i.Price * course), 2)) / ((disc.FirstOrDefault() / 100) + 1);
+                    else
+                        i.Price = i.Price;
+                }
+            return parts;
+        }
+        private IEnumerable<Part> Search_num(string number,string UserID)
+        {
+            string[] warn = { @"'", "--", "Select", "From", "Create", "Update", "Delete", "Where", "and", "or", "+", "=", "database", "insert" };
+            foreach (var i in warn)
+            {
+                var str = i.ToUpper();
+                number = number.Replace(str, "").ToUpper();
+            }
+            var parts = repo.GetParts(number);
+            var user = repo.GetUser(UserID);
+            double course = Convert.ToDouble(repo.GetCourseEuro());
+            var disc = from i in db.DefaultDiscounts
+                       select i.TheDefaultDiscount;
+            
+                foreach (var i in parts)
+                {
+                if (user.Discount != 0)
+                { i.Price = (System.Math.Round((i.Price * course), 2)) / ((user.Discount / 100) + 1); }
+                else
+                {
+                    if (disc.FirstOrDefault() != 0)
+                        i.Price = (System.Math.Round((i.Price * course), 2)) / ((disc.FirstOrDefault() / 100) + 1);
+                    else
+                        i.Price = i.Price;
+                }
+            }
+            return parts;
         }
 
         private IndexViewModel GetParts(int page)
@@ -107,9 +168,43 @@ namespace Auto_Parts_2019.Controllers
             try
             {
                 IQueryable<Part> source = repo.GetParts().AsQueryable();
-                //double d =Convert.ToDouble(repo.GetCourseEuro());
-                double course = 30.3; //=Convert.ToDouble(repo.GetCourseEuro());
-                foreach (var i in source) { i.Price = System.Math.Round((i.Price * course),2); }
+                double course =Convert.ToDouble(repo.GetCourseEuro());
+                var disc = from i in db.DefaultDiscounts
+                           select i.TheDefaultDiscount;
+                foreach (var i in source)
+                {
+                    i.Price = (System.Math.Round((i.Price * course), 2)) / ((disc.FirstOrDefault() / 100) + 1);
+                }
+                var count = source.Count();
+                var items = source.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+
+                PageViewModel pageViewModel = new PageViewModel(count, page, pageSize);
+                IndexViewModel viewModel = new IndexViewModel
+                {
+                    PageViewModel = pageViewModel,
+                    Parts = items
+                };
+                returnModel = viewModel;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex);
+            }
+            return returnModel;
+        }
+        private IndexViewModel GetParts(int page,string userid)
+        {
+            var user = repo.GetUser(userid);
+            IndexViewModel returnModel = new IndexViewModel();
+            int pageSize = 10;
+            try
+            {
+                IQueryable<Part> source = repo.GetParts().AsQueryable();
+                double course =Convert.ToDouble(repo.GetCourseEuro());
+                foreach (var i in source)
+                {
+                    i.Price = (System.Math.Round((i.Price * course), 2)) / ((user.Discount / 100) + 1);
+                }
                 var count = source.Count();
                 var items = source.Skip((page - 1) * pageSize).Take(pageSize).ToList();
 
@@ -150,6 +245,21 @@ namespace Auto_Parts_2019.Controllers
             
 
             return Json(stations);
+        }
+        private List<Order> AddParts(int PartID, string UserID)
+        {
+            List<Order> orders = new List<Order>();
+            var part = repo.GetParts(PartID);
+            var user = repo.GetUser(UserID);
+            if (user.Discount != 0)
+                part.Price = part.Price / ((user.Discount / 100)+1);
+            else
+                part.Price = part.Price;
+            Order order = new Order();
+            order.Address = user;
+            order.Part = part;
+            orders.Add(order);
+            return orders;
         }
     }
 }

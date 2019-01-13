@@ -18,6 +18,8 @@ namespace Auto_Parts_2019.Data
         void Update(Part part);
         string GetName(string email);
         object GetCourseEuro();
+        Part GetParts(int number);
+        Address GetUser(string UserID);
     }
     public class PartsRepository : IPartsRepository
     {
@@ -69,6 +71,21 @@ namespace Auto_Parts_2019.Data
                     return parts;
                 
                 else return null;
+            }
+        }
+        public Part GetParts(int number)
+        {
+            using (IDbConnection db = new SqlConnection(connectionString))
+            {
+                return  db.Query<Part>("select * from [Auto_Parts_2019].[dbo].[Parts] where [ID] = @number", new { number }).FirstOrDefault();
+            }
+        }
+        public Address GetUser(string UserID)
+        {
+
+            using (IDbConnection db = new SqlConnection(connectionString))
+            {
+                return db.Query<Address>("Select a.Country,a.Sity,a.Avenue,a.Email,a.PhoneNumber,a.UserName FROM [Auto_Parts_2019].[dbo].[AspNetUsers] a where [AddressID]=@UserID",new { UserID}).FirstOrDefault();
             }
         }
 

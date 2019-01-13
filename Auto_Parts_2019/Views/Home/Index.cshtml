@@ -215,9 +215,10 @@
                 }
 
 
-                <td>
-                    <a asp-action="addtocart" asp-route-id="@item.ID,@UserManager.GetUserId(User)">В корзину</a>
-                </td>
+                    <td>
+                        <a asp-action="addtocart" asp-route-PartID="@item.ID" asp-route-UserID="@UserManager.GetUserId(User)">В корзину</a>
+                        
+                    </td>
             </tr>
         }
     </tbody>

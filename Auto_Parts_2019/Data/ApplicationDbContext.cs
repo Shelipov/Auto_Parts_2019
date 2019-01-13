@@ -14,6 +14,7 @@ namespace Auto_Parts_2019.Data
         public DbSet<Cros> Cross { get; set; }
         public DbSet<Course> Courses { get; set; }
         public DbSet<Order> Orders { get; set; }
+        public DbSet<DefaultDiscount> DefaultDiscounts { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
