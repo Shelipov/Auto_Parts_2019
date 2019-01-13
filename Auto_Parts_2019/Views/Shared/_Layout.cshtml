@@ -8,6 +8,7 @@
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
         <link rel="stylesheet" href="~/css/site.css" />
+        <link href="/simplebox.css" rel="stylesheet">
     </environment>
     <environment exclude="Development">
         <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
@@ -38,8 +39,8 @@
             </div>
         </div>
     </nav>
-    
-   
+
+
     <partial name="_CookieConsentPartial" />
 
     <div class="container body-content">
@@ -72,5 +73,26 @@
     </environment>
 
     @RenderSection("Scripts", required: false)
+    <script type="text/javascript" src="/simplebox_util.js"></script>
+    <script type="text/javascript">
+        (function () {
+            var boxes = [], els, i, l;
+            if (document.querySelectorAll) {
+                els = document.querySelectorAll('a[rel=simplebox]');
+
+                Box.getStyles('simplebox_css', 'simplebox.css');
+                Box.getScripts('simplebox_js', 'simplebox.js', function () {
+                    simplebox.init();
+                    for (i = 0, l = els.length; i < l; ++i)
+                        simplebox.start(els[i]);
+                    simplebox.start('a[rel=simplebox_group]');
+                });
+            }
+
+
+        })();
+    </script>
 </body>
+
 </html>
+

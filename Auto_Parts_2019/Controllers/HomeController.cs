@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Auto_Parts_2019.Helpers;
 using System.Text.RegularExpressions;
 
+
 namespace Auto_Parts_2019.Controllers
 {
     public class HomeController : Controller
@@ -72,8 +73,6 @@ namespace Auto_Parts_2019.Controllers
 
         public IActionResult Contact()
         {
-            ViewData["Message"] = "Your contact page.";
-
             return View();
         }
 
@@ -127,6 +126,30 @@ namespace Auto_Parts_2019.Controllers
                 System.Diagnostics.Debug.WriteLine(ex);
             }
             return returnModel;
+        }
+        public JsonResult GetData()
+        {
+            // создадим список данных
+            List<Station> stations = new List<Station>();
+            stations.Add(new Station()
+            {
+                Id = 1,
+                PlaceName = "г. Киев ул. Дегтяревская 21",
+                GeoLat = 30.459701739011,
+                GeoLong = 50.4625697943559,
+                
+            });
+            stations.Add(new Station()
+            {
+                Id = 2,
+                PlaceName = "г. Днепр ул. Братьев Бестужевых 7 ",
+                GeoLat = 35.005002,
+                GeoLong = 48.480340,
+               
+            });
+            
+
+            return Json(stations);
         }
     }
 }

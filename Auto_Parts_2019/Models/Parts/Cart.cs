@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -54,6 +55,8 @@ namespace Auto_Parts_2019.Models.Parts
 
     public class CartLine
     {
+        [Key]
+        public int ID { get; set; }
         public Part Part { get; set; }
         public int Quantity { get; set; }
         public DateTime DateLastModified { get; set; }
