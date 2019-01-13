@@ -17,7 +17,7 @@ namespace Auto_Parts_2019.Data
         IEnumerable<Part> GetParts();
         void Update(Part part);
         string GetName(string email);
-        object GetCourseEuro();
+        double GetCourseEuro();
         Part GetParts(int number);
         Address GetUser(string UserID);
     }
@@ -35,11 +35,12 @@ namespace Auto_Parts_2019.Data
                 return db.Query<Part>("select * from Parts order by Parts.Quantity desc").ToList();
             }
         }
-        public object GetCourseEuro()
+        public double GetCourseEuro()
         {
             using (IDbConnection db = new SqlConnection(connectionString))
             {
-                return db.Query<Course>("select CourseEuro from Courses order by DateLastModified desc").FirstOrDefault();
+                var course= db.Query<Course>("select * from Courses order by DateLastModified desc").FirstOrDefault();
+                return course.CourseEuro;
             }
         }
         public string GetName(string email)
@@ -85,7 +86,7 @@ namespace Auto_Parts_2019.Data
 
             using (IDbConnection db = new SqlConnection(connectionString))
             {
-                return db.Query<Address>("Select a.Country,a.Sity,a.Avenue,a.Email,a.PhoneNumber,a.UserName FROM [Auto_Parts_2019].[dbo].[AspNetUsers] a where [AddressID]=@UserID",new { UserID}).FirstOrDefault();
+                return db.Query<Address>("Select a.Country,a.Sity,a.Avenue,a.Email,a.PhoneNumber,a.UserName,a.Discount FROM [Auto_Parts_2019].[dbo].[AspNetUsers] a where [AddressID]=@UserID", new { UserID}).FirstOrDefault();
             }
         }
 

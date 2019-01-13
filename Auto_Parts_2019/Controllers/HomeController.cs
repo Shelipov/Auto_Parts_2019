@@ -125,7 +125,7 @@ namespace Auto_Parts_2019.Controllers
                 foreach (var i in parts)
                 {
                     if (disc.FirstOrDefault() != 0)
-                        i.Price = (System.Math.Round((i.Price * course), 2)) / ((disc.FirstOrDefault() / 100) + 1);
+                        i.Price = System.Math.Round((i.Price * course*(100 - disc.FirstOrDefault()) / 100), 2);
                     else
                         i.Price = i.Price;
                 }
@@ -148,11 +148,13 @@ namespace Auto_Parts_2019.Controllers
                 foreach (var i in parts)
                 {
                 if (user.Discount != 0)
-                { i.Price = (System.Math.Round((i.Price * course), 2)) / ((user.Discount / 100) + 1); }
+                {
+                    i.Price = System.Math.Round((i.Price*course*(100 - user.Discount) / 100),2);
+                }
                 else
                 {
                     if (disc.FirstOrDefault() != 0)
-                        i.Price = (System.Math.Round((i.Price * course), 2)) / ((disc.FirstOrDefault() / 100) + 1);
+                        i.Price = System.Math.Round((i.Price * course * ((100 - disc.FirstOrDefault()) / 100)), 2);
                     else
                         i.Price = i.Price;
                 }
@@ -162,7 +164,6 @@ namespace Auto_Parts_2019.Controllers
 
         private IndexViewModel GetParts(int page)
         {
-
             IndexViewModel returnModel = new IndexViewModel();
             int pageSize = 10;
             try
@@ -173,7 +174,11 @@ namespace Auto_Parts_2019.Controllers
                            select i.TheDefaultDiscount;
                 foreach (var i in source)
                 {
-                    i.Price = (System.Math.Round((i.Price * course), 2)) / ((disc.FirstOrDefault() / 100) + 1);
+                    if (disc.FirstOrDefault() != 0)
+                        i.Price = System.Math.Round((i.Price * course * (100 - disc.FirstOrDefault()) / 100), 2);
+                    else
+                        i.Price = i.Price;
+                    
                 }
                 var count = source.Count();
                 var items = source.Skip((page - 1) * pageSize).Take(pageSize).ToList();
@@ -203,7 +208,11 @@ namespace Auto_Parts_2019.Controllers
                 double course =Convert.ToDouble(repo.GetCourseEuro());
                 foreach (var i in source)
                 {
-                    i.Price = (System.Math.Round((i.Price * course), 2)) / ((user.Discount / 100) + 1);
+                    if (user.Discount != 0)
+                        i.Price = System.Math.Round((i.Price * course* (100 - user.Discount) / 100), 2);
+                    else
+                        i.Price = i.Price;
+                    
                 }
                 var count = source.Count();
                 var items = source.Skip((page - 1) * pageSize).Take(pageSize).ToList();
@@ -252,7 +261,7 @@ namespace Auto_Parts_2019.Controllers
             var part = repo.GetParts(PartID);
             var user = repo.GetUser(UserID);
             if (user.Discount != 0)
-                part.Price = part.Price / ((user.Discount / 100)+1);
+                part.Price = (part.Price * (((100-user.Discount) / 100)));
             else
                 part.Price = part.Price;
             Order order = new Order();
