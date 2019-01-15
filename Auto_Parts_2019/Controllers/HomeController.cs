@@ -14,6 +14,7 @@ using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Principal;
+using Auto_Parts_2019.Models.Parts.DTO;
 
 namespace Auto_Parts_2019.Controllers
 {
@@ -45,10 +46,16 @@ namespace Auto_Parts_2019.Controllers
         }
         
         [Route("addtocart")]
-        public IActionResult AddToCart(int PartID, string UserID)
+        public IActionResult AddToCart(int PartID )
         {
-            return View(AddParts(PartID, UserID));
-            //return View("AddToCart");
+            List<OrderDTO> orders = new List<OrderDTO>();
+            
+            if (User.Identity.IsAuthenticated)
+            {
+                return View(AddParts(PartID, userManager.GetUserId(User), orders));
+            }
+            else
+                return View(AddParts(PartID, orders));
         }
         [Route("addtocart")]
         public IActionResult AddToCart(List<Order> orders)
@@ -255,18 +262,68 @@ namespace Auto_Parts_2019.Controllers
 
             return Json(stations);
         }
-        private List<Order> AddParts(int PartID, string UserID)
+        private List<OrderDTO> AddParts(int PartID, string UserID, List<OrderDTO> orders)
         {
-            List<Order> orders = new List<Order>();
+            
             var part = repo.GetParts(PartID);
             var user = repo.GetUser(UserID);
+            double course = Convert.ToDouble(repo.GetCourseEuro());
+            double price;
             if (user.Discount != 0)
-                part.Price = (part.Price * (((100-user.Discount) / 100)));
+            { part.Price = System.Math.Round(part.Price * course * ((100 - user.Discount) / 100)); price = part.Price; }
             else
-                part.Price = part.Price;
-            Order order = new Order();
-            order.Address = user;
-            order.Part = part;
+            { part.Price = part.Price; price = part.Price;}
+            int quantity;
+            if (part.Group_Parts == "Тормозные диски")
+                quantity = 2;
+            else if (part.Group_Parts == "Тормозные колодки")
+                quantity = 1;
+            else
+                quantity = 1;
+        OrderDTO order = new OrderDTO() { AddressID=user.AddressID,Analogues=part.Analogues,Avenue=user.Avenue,
+                                             Brand=part.Brand,Comment="",Country=user.Country,Description=part.Description,
+                                             Foto_link=part.Foto_link,Group_Auto=part.Group_Auto,Group_Parts=part.Group_Parts,
+                                             OrderID=DateTime.Now.ToString(),IP="",Number=part.Number,PartID=part.ID,Price=price,Quantity=quantity,Sity=user.Sity};
+            orders.Add(order);
+            return orders;
+        }
+        private List<OrderDTO> AddParts(int PartID, List<OrderDTO> orders)
+        {
+            List<OrderDTO> orders = new List<OrderDTO>();
+            var part = repo.GetParts(PartID);
+            double course = Convert.ToDouble(repo.GetCourseEuro());
+            double price;
+            var dis= from i in db.DefaultDiscounts
+                           select i.TheDefaultDiscount;
+            int discount = dis.FirstOrDefault();
+            if (discount != 0)
+            { part.Price = System.Math.Round(part.Price * course * ((100 - discount) / 100)); price = part.Price; }
+            else
+            { part.Price = part.Price; price = part.Price; }
+            int quantity;
+            if (part.Group_Parts == "Тормозные диски")
+                quantity = 2;
+            else if (part.Group_Parts == "Тормозные колодки")
+                quantity = 1;
+            else
+                quantity = 1;
+            OrderDTO order = new OrderDTO()
+            {
+                Analogues = part.Analogues,
+                Brand = part.Brand,
+                Comment = "",
+                
+                Description = part.Description,
+                Foto_link = part.Foto_link,
+                Group_Auto = part.Group_Auto,
+                Group_Parts = part.Group_Parts,
+                OrderID = DateTime.Now.ToString(),
+                IP = "",
+                Number = part.Number,
+                PartID = part.ID,
+                Price = price,
+                Quantity = quantity,
+            };
             orders.Add(order);
             return orders;
         }
