@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] -Zimmermann from Ukrane</title>
-
+    <link rel="shortcut icon" href="~/images/favicon.ico" type="image/x-icon">
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
         <link rel="stylesheet" href="~/css/site.css" />
@@ -27,13 +27,15 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">Zimmermann from Ukrane</a>
+                <img src="~/images/Zimmermann.png" style="margin-top:5px" alt="Zimmermann from Ukrane">
+                @*<a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">Zimmermann from Ukrane</a>*@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li><a asp-area="" asp-controller="Home" asp-action="Index">Главная</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="About">Каталог</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="Contact">Контакты</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="Basket">Корзина</a></li>
                 </ul>
                 <partial name="_LoginPartial" />
             </div>

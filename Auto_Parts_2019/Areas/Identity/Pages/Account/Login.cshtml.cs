@@ -78,6 +78,11 @@ namespace Auto_Parts_2019.Areas.Identity.Pages.Account
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 string UserName = repo.GetName(Input.Email);
+                if (UserName == null || UserName == "")
+                {
+                    ModelState.AddModelError(string.Empty, "Неудачная попытка входа.");
+                    return Page();
+                }
                 var result = await _signInManager.PasswordSignInAsync(UserName, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {

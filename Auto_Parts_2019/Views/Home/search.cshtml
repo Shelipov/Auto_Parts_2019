@@ -38,16 +38,16 @@
             {
                 <tr>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Number)
+                        <strong>@Html.DisplayFor(modelItem => item.Number)</strong>
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Description)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Price)
+                        @Html.DisplayFor(modelItem => item.Price) грн.
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Quantity)
+                        @Html.DisplayFor(modelItem => item.Quantity) шт.
                     </td>
                     <td>
                         @if (item.Foto_link != null)

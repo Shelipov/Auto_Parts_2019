@@ -1,38 +1,95 @@
-﻿@model IEnumerable<Auto_Parts_2019.Models.Parts.Order>
+﻿@model IEnumerable<Auto_Parts_2019.Models.Parts.DTO._OrderDTO>
 
 @{
-    ViewData["Title"] = "AddToCart";
+    ViewData["Title"] = "Корзина";
 }
 
-<h2>AddToCart</h2>
+<h2>Корзина</h2>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title></title>
+    <link href="~/simplebox/simplebox.css" rel="stylesheet">
+</head>
 <table class="table">
     <thead>
         <tr>
+            
             <th>
-                @Html.DisplayNameFor(model => model.Comment)
+                <h3>Номер</h3>
             </th>
+            <th>
+                <h3>Описание</h3>
+            </th>
+            <th>
+                <h3>Цена</h3>
+            </th>
+            <th>
+                <h3>Фото</h3>
+            </th>
+            
+            <th>
+                <h3>Кол.</h3>
+            </th>
+            
             <th></th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
         <tr>
+            
             <td>
-                @Html.DisplayFor(modelItem => item.Comment)
+                <strong>@Html.DisplayFor(modelItem => item.Number)</strong>
+</td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Part.Number)
+                @Html.DisplayFor(modelItem => item.Price) грн.
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.OrderID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.OrderID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.OrderID">Delete</a>
+                <a rel="simplebox" href="~/images/Foto_Zimmermann/Foto_Zimmermann/@item.Foto_link.Replace(@"\",@"/").Replace(@"~/images/Foto_Zimmermann/Foto_Zimmermann/","").ToString()">
+                    <img src="~/images/Foto_Zimmermann/Foto_Zimmermann/@item.Foto_link.Replace(@"\",@"/").Replace(@"~/images/Foto_Zimmermann/Foto_Zimmermann/","").ToString()" class="img-responsive" width="150" height="150" />
+                </a>
+            </td>
+            <td>
+                <input type="number" step="1" min="0" max="10" value="@Html.DisplayFor(modelItem => item.Quantity)"/> шт.
+            </td>
+            
+            <td>
+                @*<input type="number" step="1" min="0" max="10" value="2" id="@item.Quantity" name="@item.Quantity" />*@
+                @*<a asp-action="Edit" asp-route-id="@item.Quantity">Изменить</a>*@ 
+                @*<a asp-action="Delete" asp-route-id="@item.Number">Удалить</a>*@
             </td>
         </tr>
 }
     </tbody>
 </table>
+<html>
+<body>
+
+
+    <script type="text/javascript" src="~/simplebox/simplebox.js"></script>
+    <script type="text/javascript">
+        (function () {
+            var boxes = [], els, i, l;
+            if (document.querySelectorAll) {
+                els = document.querySelectorAll('a[rel=simplebox]');
+
+                Box.getStyles('simplebox_css', '~/simplebox/simplebox.css');
+                Box.getScripts('simplebox_js', '~/simplebox/simplebox.js', function () {
+                    simplebox.init();
+                    for (i = 0, l = els.length; i < l; ++i)
+                        simplebox.start(els[i]);
+                    simplebox.start('a[rel=simplebox_group]');
+                });
+            }
+
+
+        })();
+    </script>
+</body>
+</html>

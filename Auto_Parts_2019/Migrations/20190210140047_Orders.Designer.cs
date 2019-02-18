@@ -4,14 +4,16 @@ using Auto_Parts_2019.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Auto_Parts_2019.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190210140047_Orders")]
+    partial class Orders
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -54,8 +56,6 @@ namespace Auto_Parts_2019.Migrations
                     b.Property<string>("SessionID");
 
                     b.Property<string>("Sity");
-
-                    b.Property<string>("UserID");
 
                     b.HasKey("ID");
 
@@ -100,23 +100,6 @@ namespace Auto_Parts_2019.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("Cross");
-                });
-
-            modelBuilder.Entity("Auto_Parts_2019.Models.Parts.Debit", b =>
-                {
-                    b.Property<int>("DebitID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("AdressID");
-
-                    b.Property<string>("UserID");
-
-                    b.Property<double>("debit");
-
-                    b.HasKey("DebitID");
-
-                    b.ToTable("Debits");
                 });
 
             modelBuilder.Entity("Auto_Parts_2019.Models.Parts.DefaultDiscount", b =>
@@ -175,21 +158,6 @@ namespace Auto_Parts_2019.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("_OrdersDTO");
-                });
-
-            modelBuilder.Entity("Auto_Parts_2019.Models.Parts.Manager", b =>
-                {
-                    b.Property<int>("ManagerID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("AdressID");
-
-                    b.Property<string>("Email");
-
-                    b.HasKey("ManagerID");
-
-                    b.ToTable("Managers");
                 });
 
             modelBuilder.Entity("Auto_Parts_2019.Models.Parts.Part", b =>

@@ -1,0 +1,125 @@
+﻿@model IEnumerable<Auto_Parts_2019.Models.Parts.DTO._OrderDTO>
+
+    @{
+        ViewData["Title"] = "Basket";
+    }
+
+    <h2>Корзина</h2>
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title></title>
+        <link href="~/simplebox/simplebox.css" rel="stylesheet">
+    </head>
+    <table class="table">
+        <thead>
+            <tr>
+
+                <th>
+                    <h3>Номер</h3>
+                </th>
+                <th>
+                    <h3>Описание</h3>
+                </th>
+                <th>
+                    <h3>Цена</h3>
+                </th>
+                <th>
+                    <h3>Фото</h3>
+                </th>
+
+                <th>
+                    <h3>Кол.</h3>
+                </th>
+
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+
+                    <td>
+                        <strong>@Html.DisplayFor(modelItem => item.Number)</strong>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Price) грн.
+                    </td>
+                    <td>
+                        <a rel="simplebox" href="~/images/Foto_Zimmermann/Foto_Zimmermann/@item.Foto_link.Replace(@"\",@"/").Replace(@"~/images/Foto_Zimmermann/Foto_Zimmermann/","").ToString()">
+                            <img src="~/images/Foto_Zimmermann/Foto_Zimmermann/@item.Foto_link.Replace(@"\",@"/").Replace(@"~/images/Foto_Zimmermann/Foto_Zimmermann/","").ToString()" class="img-responsive" width="150" height="150" />
+                        </a>
+                    </td>
+                    <td>
+                        <input type="number" step="1" min="0" max="10" value="@Html.DisplayFor(modelItem => item.Quantity)"/> шт.
+                    </td>
+
+                    <td>
+                        @*<input type="number" step="1" min="0" max="10" value="2" id="@item.Quantity" name="@item.Quantity" />*@
+                        @*<a asp-action="Edit" asp-route-id="@item.Quantity">Изменить</a>*@
+                        @*<a asp-action="Delete" asp-route-id="@item.Number">Удалить</a>*@
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <html>
+    <body>
+
+
+        <script type="text/javascript" src="~/simplebox/simplebox.js"></script>
+        <script type="text/javascript">
+            (function () {
+                var boxes = [], els, i, l;
+                if (document.querySelectorAll) {
+                    els = document.querySelectorAll('a[rel=simplebox]');
+
+                    Box.getStyles('simplebox_css', '~/simplebox/simplebox.css');
+                    Box.getScripts('simplebox_js', '~/simplebox/simplebox.js', function () {
+                        simplebox.init();
+                        for (i = 0, l = els.length; i < l; ++i)
+                            simplebox.start(els[i]);
+                        simplebox.start('a[rel=simplebox_group]');
+                    });
+                }
+
+
+            })();
+        </script>
+    </body>
+</html>
+
+<div class="row">
+    <div class="col-md-4">
+        @*<form asp-action="Create_Basket" asp-controller="Home" method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <textarea asp-for=@model.Comment placeholder="Написать коментарий" cols="100" rows="10"></textarea>
+                <span asp-validation-for=@model.Comment class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Отправить заказ" class="btn btn-default" id="btnUpload" />
+            </div>
+        </form>*@
+        @*<form asp-action="addcoments" asp-controller="Home" method="post" enctype="multipart/form-data">*@
+        <form asp-action="Create_Basket" method="post">
+            <p>
+                <label for="comment">Ваш комментарий:</label><br />
+                <textarea name="comment" id="comment" cols="100" rows="10" placeholder="Не более 200 символов" maxlength="200"></textarea>
+            </p>
+            <p>
+                <input type="submit" value="Добавить" />
+            </p>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-controller="Home" asp-action="Index">На Главную</a>
+</div>
+

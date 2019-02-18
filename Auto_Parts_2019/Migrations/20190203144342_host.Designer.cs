@@ -10,14 +10,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Auto_Parts_2019.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190113152729_Discount")]
-    partial class Discount
+    [Migration("20190203144342_host")]
+    partial class host
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.1-rtm-30846")
+                .HasAnnotation("ProductVersion", "2.1.4-rtm-31024")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -93,6 +93,48 @@ namespace Auto_Parts_2019.Migrations
                     b.ToTable("DefaultDiscounts");
                 });
 
+            modelBuilder.Entity("Auto_Parts_2019.Models.Parts.DTO.OrderDTO", b =>
+                {
+                    b.Property<string>("OrderID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("AddressID");
+
+                    b.Property<string>("Analogues");
+
+                    b.Property<string>("Avenue");
+
+                    b.Property<string>("Brand");
+
+                    b.Property<string>("Comment");
+
+                    b.Property<string>("Country");
+
+                    b.Property<string>("Description");
+
+                    b.Property<string>("Foto_link");
+
+                    b.Property<string>("Group_Auto");
+
+                    b.Property<string>("Group_Parts");
+
+                    b.Property<string>("IP");
+
+                    b.Property<string>("Number");
+
+                    b.Property<int>("PartID");
+
+                    b.Property<double>("Price");
+
+                    b.Property<int>("Quantity");
+
+                    b.Property<string>("Sity");
+
+                    b.HasKey("OrderID");
+
+                    b.ToTable("OrdersDTO");
+                });
+
             modelBuilder.Entity("Auto_Parts_2019.Models.Parts.Order", b =>
                 {
                     b.Property<int>("OrderID")
@@ -104,6 +146,8 @@ namespace Auto_Parts_2019.Migrations
                     b.Property<int?>("CartLineID");
 
                     b.Property<string>("Comment");
+
+                    b.Property<bool>("OneCCreate");
 
                     b.Property<int?>("PartID");
 
@@ -137,6 +181,8 @@ namespace Auto_Parts_2019.Migrations
                     b.Property<string>("Group_Parts");
 
                     b.Property<string>("Number");
+
+                    b.Property<bool>("OneCCreate");
 
                     b.Property<double>("Price");
 
@@ -332,6 +378,8 @@ namespace Auto_Parts_2019.Migrations
                     b.Property<string>("IP");
 
                     b.Property<int>("Index");
+
+                    b.Property<bool>("OneCCreate");
 
                     b.Property<string>("Sity");
 

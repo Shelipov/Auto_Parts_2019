@@ -4,29 +4,46 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <UserSecretsId>aspnet-Auto_Parts_2019-542ACF63-3423-49EC-903A-29D956C98147</UserSecretsId>
     <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
+    <NoWin32Manifest>true</NoWin32Manifest>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Data\Migrations\00000000000000_CreateIdentitySchema.cs" />
-    <Compile Remove="Data\Migrations\00000000000000_CreateIdentitySchema.Designer.cs" />
-    <Compile Remove="Data\Migrations\20181115203918_AddContext.cs" />
-    <Compile Remove="Data\Migrations\20181115203918_AddContext.Designer.cs" />
-    <Compile Remove="Data\Migrations\20181115204120_AddContext1.cs" />
-    <Compile Remove="Data\Migrations\20181115204120_AddContext1.Designer.cs" />
-    <Compile Remove="Data\Migrations\20181115210313_AddContext.cs" />
-    <Compile Remove="Data\Migrations\20181115210313_AddContext.Designer.cs" />
-    <Compile Remove="Data\Migrations\20181115210555_AddContext.cs" />
-    <Compile Remove="Data\Migrations\20181115210555_AddContext.Designer.cs" />
-    <Compile Remove="Data\Migrations\20181208142839_First.cs" />
-    <Compile Remove="Data\Migrations\20181208142839_First.Designer.cs" />
-    <Compile Remove="Data\Migrations\20181215141507_UpdateDB.cs" />
-    <Compile Remove="Data\Migrations\20181215141507_UpdateDB.Designer.cs" />
-    <Compile Remove="Data\Migrations\20181216134212_part.cs" />
-    <Compile Remove="Data\Migrations\20181216134212_part.Designer.cs" />
-    <Compile Remove="Data\Migrations\20181224162319_Cros.cs" />
-    <Compile Remove="Data\Migrations\20181224162319_Cros.Designer.cs" />
-    <Compile Remove="Data\Migrations\20181230151107_FirstSQL.cs" />
-    <Compile Remove="Data\Migrations\20181230151107_FirstSQL.Designer.cs" />
+    <Compile Remove="Migrations\20181230173918_First.cs" />
+    <Compile Remove="Migrations\20181230173918_First.Designer.cs" />
+    <Compile Remove="Migrations\20190105113602_Course.cs" />
+    <Compile Remove="Migrations\20190105113602_Course.Designer.cs" />
+    <Compile Remove="Migrations\20190113152729_Discount.cs" />
+    <Compile Remove="Migrations\20190113152729_Discount.Designer.cs" />
+    <Compile Remove="Migrations\20190203104155_OneC.cs" />
+    <Compile Remove="Migrations\20190203104155_OneC.Designer.cs" />
+    <Compile Remove="Migrations\20190203144058_host.cs" />
+    <Compile Remove="Migrations\20190203144058_host.Designer.cs" />
+    <Compile Remove="Migrations\20190210110658_Order.cs" />
+    <Compile Remove="Migrations\20190210110658_Order.Designer.cs" />
+    <Compile Remove="Migrations\20190210112932_Order.cs" />
+    <Compile Remove="Migrations\20190210112932_Order.Designer.cs" />
+    <Compile Remove="Migrations\20190210113433_Order.cs" />
+    <Compile Remove="Migrations\20190210113433_Order.Designer.cs" />
+    <Compile Remove="Migrations\20190210114434_Order.cs" />
+    <Compile Remove="Migrations\20190210114434_Order.Designer.cs" />
+    <Compile Remove="Migrations\20190210115200_Orders.cs" />
+    <Compile Remove="Migrations\20190210115200_Orders.Designer.cs" />
+    <Compile Remove="Migrations\20190210115530_Orders.cs" />
+    <Compile Remove="Migrations\20190210115530_Orders.Designer.cs" />
+    <Compile Remove="Migrations\20190210115956_Orders.cs" />
+    <Compile Remove="Migrations\20190210115956_Orders.Designer.cs" />
+    <Compile Remove="Migrations\20190210120246_Orders.cs" />
+    <Compile Remove="Migrations\20190210120246_Orders.Designer.cs" />
+    <Compile Remove="Migrations\20190210120920_Orders.cs" />
+    <Compile Remove="Migrations\20190210120920_Orders.Designer.cs" />
+    <Compile Remove="Migrations\20190210121633_MigrateDB.cs" />
+    <Compile Remove="Migrations\20190210121633_MigrateDB.Designer.cs" />
+    <Compile Remove="Migrations\20190210125813_MigrateDB.cs" />
+    <Compile Remove="Migrations\20190210125813_MigrateDB.Designer.cs" />
+    <Compile Remove="Migrations\20190210131436_MigrateDB.cs" />
+    <Compile Remove="Migrations\20190210131436_MigrateDB.Designer.cs" />
+    <Compile Remove="Migrations\20190210135026_Migrate.cs" />
+    <Compile Remove="Migrations\20190210135026_Migrate.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -38,7 +55,6 @@
 
   <ItemGroup>
     <Folder Include="Areas\Identity\Services\" />
-    <Folder Include="Data\Migrations\" />
   </ItemGroup>
 
 </Project>

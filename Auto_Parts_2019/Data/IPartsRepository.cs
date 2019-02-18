@@ -11,8 +11,8 @@ namespace Auto_Parts_2019.Data
 {
     public interface IPartsRepository
     {
-        void Create(Part Part);
-        void Delete(int id);
+        void Create(_Order Part);
+        void Delete(string id);
         IEnumerable<Part> GetParts(string number);
         IEnumerable<Part> GetParts();
         void Update(Part part);
@@ -20,6 +20,7 @@ namespace Auto_Parts_2019.Data
         double GetCourseEuro();
         Part GetParts(int number);
         Address GetUser(string UserID);
+        string GetUserID(string addressid);
     }
     public class PartsRepository : IPartsRepository
     {
@@ -32,7 +33,8 @@ namespace Auto_Parts_2019.Data
         {
             using (IDbConnection db = new SqlConnection(connectionString))
             {
-                return db.Query<Part>("select * from Parts order by Parts.Quantity desc").ToList();
+                var result = db.Query<Part>("select * from Parts order by Parts.Quantity desc").ToList();
+                return result;
             }
         }
         public double GetCourseEuro()
@@ -47,14 +49,14 @@ namespace Auto_Parts_2019.Data
         {
             using (IDbConnection db = new SqlConnection(connectionString))
             {
-                string[] warn = { @"'", "--", "Select", "From", "Create", "Update", "Delete", "Where", "and", "or", "+", "=", "database", "insert" };
+                string[] warn = { @"'", "--", " Select ", " From ", " Create ", " Update ", " Delete ", " Where ", " and ", " or", "+", "=", " database ", " insert " };
                 foreach (var i in warn)
                 {
                     var str = i.ToUpper();
                     email = email.Replace(str, "").ToUpper();
                 }
-                var result= db.Query<Address>("SELECT [UserName] FROM [Auto_Parts_2019].[dbo].[AspNetUsers] Where [NormalizedEmail]=@NormalizedEmail",new { @NormalizedEmail = email}).FirstOrDefault();               
-                return result.ToString();
+                var result= db.Query<string>("SELECT UserName FROM AspNetUsers Where NormalizedEmail= @NormalizedEmail", new { @NormalizedEmail = email}).FirstOrDefault();
+                return result;
             }
         }
 
@@ -62,11 +64,11 @@ namespace Auto_Parts_2019.Data
         {
             using (IDbConnection db = new SqlConnection(connectionString))
             {
-                var numbers= db.Query<Cros>("select [Number] from [Auto_Parts_2019].[dbo].[Cross] where [SearchNumber]=@number or [Number]=@number", new { number }).FirstOrDefault();
+                var numbers= db.Query<Cros>("select [Number] from [Cross] where [SearchNumber]=@number or [Number]=@number", new { number }).FirstOrDefault();
                 string num = numbers.Number.ToString();
-                var analog = db.Query<Part>("select [Analogues] from [Auto_Parts_2019].[dbo].[Parts] where [Number]= @num", new { num }).FirstOrDefault();
+                var analog = db.Query<Part>("select [Analogues] from [Parts] where [Number]= @num", new { num }).FirstOrDefault();
                 string an = analog.Analogues.ToString();
-                var parts = db.Query<Part>("select * from [Auto_Parts_2019].[dbo].[Parts] where [Analogues] = @an", new { an });
+                var parts = db.Query<Part>("select * from [Parts] where [Analogues] = @an", new { an });
                 
                 if (parts != null)
                     return parts;
@@ -78,7 +80,7 @@ namespace Auto_Parts_2019.Data
         {
             using (IDbConnection db = new SqlConnection(connectionString))
             {
-                return  db.Query<Part>("select * from [Auto_Parts_2019].[dbo].[Parts] where [ID] = @number", new { number }).FirstOrDefault();
+                return  db.Query<Part>("select * from [Parts] where [ID] = @number", new { number }).FirstOrDefault();
             }
         }
         public Address GetUser(string UserID)
@@ -86,21 +88,23 @@ namespace Auto_Parts_2019.Data
 
             using (IDbConnection db = new SqlConnection(connectionString))
             {
-                return db.Query<Address>("Select a.Country,a.Sity,a.Avenue,a.Email,a.PhoneNumber,a.UserName,a.Discount FROM [Auto_Parts_2019].[dbo].[AspNetUsers] a where [AddressID]=@UserID", new { UserID}).FirstOrDefault();
+                return db.Query<Address>("Select a.Country,a.Sity,a.Avenue,a.Email,a.PhoneNumber,a.UserName,a.Discount FROM [AspNetUsers] a where [AddressID]=@UserID", new { UserID}).FirstOrDefault();
             }
         }
 
-        public void Create(Part Part)
+        public void Create(_Order Part)
         {
             using (IDbConnection db = new SqlConnection(connectionString))
             {
-                var sqlQuery = "INSERT INTO Parts (Name, Age) VALUES(@Name, @Age)";
-                db.Execute(sqlQuery, Part);
+                var sqlQuery = @"INSERT INTO _Orders ([SessionID],OrderID,PartID,Number,Brand,Price,Group_Parts,Quantity
+                                 ,AddressID, Country, Sity, Avenue, IP, Comment, OneCCreate,UserID) 
+                                 VALUES( @SessionID, @OrderID, @PartID, @Number, @Brand, @Price, @Group_Parts, @Quantity,
+                                 @AddressID, @Country, @Sity, @Avenue, @IP, @Comment, @OneCCreate, @UserID)";
+                db.Execute(sqlQuery, new { @SessionID = Part.SessionID, @OrderID=Part.OrderID,
+                    @PartID=Part.PartID,@Number=Part.Number,@Brand=Part.Brand,@Price=Part.Price,
+                    @Group_Parts=Part.Group_Parts,@Quantity=Part.Quantity,@AddressID=Part.AddressID,@Country=Part.Country,
+                    @Sity=Part.Sity,@Avenue=Part.Avenue,@IP=Part.IP,@Comment=Part.Comment,@OneCCreate=Part.OneCCreate,@UserID=Part.UserID});
 
-                // если мы хотим получить id добавленного пользователя
-                //var sqlQuery = "INSERT INTO Parts (Name, Age) VALUES(@Name, @Age); SELECT CAST(SCOPE_IDENTITY() as int)";
-                //int? PartId = db.Query<int>(sqlQuery, Part).FirstOrDefault();
-                //Part.Id = PartId.Value;
             }
         }
 
@@ -109,16 +113,25 @@ namespace Auto_Parts_2019.Data
             using (IDbConnection db = new SqlConnection(connectionString))
             {
                 var sqlQuery = "UPDATE Parts SET Name = @Name, Age = @Age WHERE Id = @Id";
-                db.Execute(sqlQuery, Part);
+                db.Execute(sqlQuery, new { Part });
             }
         }
 
-        public void Delete(int id)
+        public void Delete(string OrderID)
         {
             using (IDbConnection db = new SqlConnection(connectionString))
             {
-                var sqlQuery = "DELETE FROM Parts WHERE Id = @id";
-                db.Execute(sqlQuery, new { id });
+                var sqlQuery = "DELETE _OrdersDTO Where OrderID = @OrderID";
+                db.Execute(sqlQuery, new { OrderID = OrderID });
+            }
+        }
+        public string GetUserID(string addressid)
+        {
+            using (IDbConnection db = new SqlConnection(connectionString))
+            {
+                var sqlQuery = @"SELECT Id From AspNetUsers Where AddressID = @addressid ";
+                var result = db.Query<string>(sqlQuery, new { addressid }).FirstOrDefault();
+                return result;
             }
         }
     }

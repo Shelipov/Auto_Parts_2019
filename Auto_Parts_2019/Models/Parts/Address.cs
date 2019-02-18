@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Security.Principal;
@@ -19,6 +20,8 @@ namespace Auto_Parts_2019.Models.Parts
         public string IP { get; set; }
         public int Discount { get; set; }
         public IdentityUser UserID { get; set; }
+        [DefaultValue(false)]
+        public bool OneCCreate { get; set; }
 
 
     }

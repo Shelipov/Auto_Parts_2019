@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Principal;
 using Auto_Parts_2019.Models.Parts.DTO;
+using Microsoft.AspNetCore.Http;
 
 namespace Auto_Parts_2019.Controllers
 {
@@ -23,17 +24,22 @@ namespace Auto_Parts_2019.Controllers
         private readonly SignInManager<IdentityUser> signInManager;
         private readonly UserManager<IdentityUser> userManager;
         public ApplicationDbContext db;
-        private Repository<Part> Repo;
+       
         IPartsRepository repo;
+        List<_OrderDTO> orders = new List<_OrderDTO>();
+        const string SessionId = "_Id";
         public HomeController(ApplicationDbContext db,IPartsRepository _repo, SignInManager<IdentityUser> _signInManager, UserManager<IdentityUser> _userManager)
         {
+           
             this.db = db;
             repo = _repo;
-            this.Repo = new Repository<Part>(this.db);
+            
             signInManager = _signInManager;
             userManager = _userManager;
+            
         }
 
+        //[ResponseCache(Location = ResponseCacheLocation.Any, Duration = 300)]
         public  IActionResult Index(int page = 1)
         {
             if (User.Identity.IsAuthenticated)
@@ -45,54 +51,91 @@ namespace Auto_Parts_2019.Controllers
 
         }
         
+        
         [Route("addtocart")]
         public IActionResult AddToCart(int PartID )
         {
-            List<OrderDTO> orders = new List<OrderDTO>();
-            
+
             if (User.Identity.IsAuthenticated)
             {
-                return View(AddParts(PartID, userManager.GetUserId(User), orders));
+                AddParts(PartID, userManager.GetUserId(User));
+                return Redirect("~/basket");
             }
             else
-                return View(AddParts(PartID, orders));
+                return Redirect("~/Identity/Account/Register");
+
         }
-        [Route("addtocart")]
-        public IActionResult AddToCart(List<Order> orders)
+        [Route("basket")]
+        public IActionResult Basket()
         {
-            
-            return View("AddToCart");
+            if (User.Identity.IsAuthenticated)
+            {
+                var order = from i in db._OrdersDTO
+                            where i.AddressID == userManager.GetUserId(User)
+                            select i;
+                return View(order);
+            }
+            else
+                return Redirect("~/Identity/Account/Register");
+        }
+        //[Route("add/{coments}")]
+        [HttpPost]
+        public IActionResult Create_Basket(string comment)   //(List<OrderDTO> list)
+        {
+            AddOrder(comment);
+            return Redirect("~/Home/Index");
         }
 
-        //[Route("search")]
+        //[ResponseCache(Location = ResponseCacheLocation.Any, Duration = 300)]
         [HttpPost("search")]
         public IActionResult Search(string number)
         {
-            if (User.Identity.IsAuthenticated)
+            try
             {
-                return View(Search_num(number,userManager.GetUserId(User)));
+                if (User.Identity.IsAuthenticated)
+                {
+                    var result = Search_num(number, userManager.GetUserId(User));
+                    if (result != null)
+                        return View(result);
+                    else
+                    { return Redirect("~/Home/Index");  }
+                }
+                else
+                {
+                    var result = Search_num(number);
+                    if (result != null)
+                        return View(result);
+                    else
+                    { return Redirect("~/Home/Index"); }
+                }
+                    
             }
-            else
-                return View(Search_num(number));
+            catch(Exception ex)
+            {
+                return Redirect("~/Home/Index"); 
+            }
             
         }
-        [Route("partaddexel")]
-        public IActionResult PartAddExel()
+        
+        [NonAction]
+        private async Task<bool> SendMessage(string id, string text, string name)
         {
-
-            return View("Index");
+            try
+            {
+                EmailService emailService = new EmailService();
+                string email = (from i in db.Users
+                                where i.Id == id
+                                select i.Email).FirstOrDefault();
+                await emailService.SendEmailAsync(email, text, name);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
-        public async Task<IActionResult> SendMessage(int id, string text, string name)
-        {
-            EmailService emailService = new EmailService();
-            string email = (from i in db.Users
-                            where i.Id == id.ToString()
-                            select i.Email).FirstOrDefault();
-            await emailService.SendEmailAsync(email, text, name);
-            return RedirectToAction("Index");
-        }
-
+        [ResponseCache(Location = ResponseCacheLocation.Any, Duration = 300)]
         public IActionResult About()
         {
             ViewData["Message"] = "Your application description page.";
@@ -100,21 +143,25 @@ namespace Auto_Parts_2019.Controllers
             return View();
         }
 
+        //[ResponseCache(Location = ResponseCacheLocation.Any, Duration = 300)]
         public IActionResult Contact()
         {
             return View();
         }
 
+        //[ResponseCache(Location = ResponseCacheLocation.Any, Duration = 300)]
         public IActionResult Privacy()
         {
             return View();
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        //[ResponseCache(Location = ResponseCacheLocation.Any, Duration = 300)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        [NonAction]
         private IEnumerable<Part> Search_num(string number)
         {
             string[] warn = { @"'","--","Select","From","Create","Update","Delete","Where","and","or","+","=","database","insert" };
@@ -125,20 +172,25 @@ namespace Auto_Parts_2019.Controllers
             }
 
             var parts= repo.GetParts(number);
-            
-            double course = Convert.ToDouble(repo.GetCourseEuro());
-            var disc = from i in db.DefaultDiscounts
-                       select i.TheDefaultDiscount;            
+            if (parts != null)
+            {
+                double course = Convert.ToDouble(repo.GetCourseEuro());
+                var disc = from i in db.DefaultDiscounts
+                           select i.TheDefaultDiscount;
                 foreach (var i in parts)
                 {
                     if (disc.FirstOrDefault() != 0)
-                        i.Price = System.Math.Round((i.Price * course*(100 - disc.FirstOrDefault()) / 100), 2);
+                        i.Price = System.Math.Round((i.Price * course * (100 - disc.FirstOrDefault()) / 100), 2);
                     else
                         i.Price = i.Price;
                 }
-            return parts;
+                return parts;
+            }
+            else
+                return null;
         }
-        private IEnumerable<Part> Search_num(string number,string UserID)
+        [NonAction]
+        private IEnumerable<Part> Search_num(string number, string UserID)
         {
             string[] warn = { @"'", "--", "Select", "From", "Create", "Update", "Delete", "Where", "and", "or", "+", "=", "database", "insert" };
             foreach (var i in warn)
@@ -147,28 +199,33 @@ namespace Auto_Parts_2019.Controllers
                 number = number.Replace(str, "").ToUpper();
             }
             var parts = repo.GetParts(number);
-            var user = repo.GetUser(UserID);
-            double course = Convert.ToDouble(repo.GetCourseEuro());
-            var disc = from i in db.DefaultDiscounts
-                       select i.TheDefaultDiscount;
-            
+            if (parts != null)
+            {
+                var user = repo.GetUser(UserID);
+                double course = Convert.ToDouble(repo.GetCourseEuro());
+                var disc = from i in db.DefaultDiscounts
+                           select i.TheDefaultDiscount;
+
                 foreach (var i in parts)
                 {
-                if (user.Discount != 0)
-                {
-                    i.Price = System.Math.Round((i.Price*course*(100 - user.Discount) / 100),2);
-                }
-                else
-                {
-                    if (disc.FirstOrDefault() != 0)
-                        i.Price = System.Math.Round((i.Price * course * ((100 - disc.FirstOrDefault()) / 100)), 2);
+                    if (user.Discount != 0)
+                    {
+                        i.Price = System.Math.Round((i.Price * course * (100 - user.Discount) / 100), 2);
+                    }
                     else
-                        i.Price = i.Price;
+                    {
+                        if (disc.FirstOrDefault() != 0)
+                            i.Price = System.Math.Round((i.Price * course * ((100 - disc.FirstOrDefault()) / 100)), 2);
+                        else
+                            i.Price = i.Price;
+                    }
                 }
+                return parts;
             }
-            return parts;
+            else
+                return null;
         }
-
+        [NonAction]
         private IndexViewModel GetParts(int page)
         {
             IndexViewModel returnModel = new IndexViewModel();
@@ -204,6 +261,7 @@ namespace Auto_Parts_2019.Controllers
             }
             return returnModel;
         }
+        [NonAction]
         private IndexViewModel GetParts(int page,string userid)
         {
             var user = repo.GetUser(userid);
@@ -238,6 +296,8 @@ namespace Auto_Parts_2019.Controllers
             }
             return returnModel;
         }
+
+        [ResponseCache(Location = ResponseCacheLocation.Any, Duration = 300)]
         public JsonResult GetData()
         {
             // создадим список данных
@@ -262,7 +322,8 @@ namespace Auto_Parts_2019.Controllers
 
             return Json(stations);
         }
-        private List<OrderDTO> AddParts(int PartID, string UserID, List<OrderDTO> orders)
+        [NonAction]
+        private List<_OrderDTO> AddParts(int PartID, string UserID)
         {
             
             var part = repo.GetParts(PartID);
@@ -270,45 +331,59 @@ namespace Auto_Parts_2019.Controllers
             double course = Convert.ToDouble(repo.GetCourseEuro());
             double price;
             if (user.Discount != 0)
-            { part.Price = System.Math.Round(part.Price * course * ((100 - user.Discount) / 100)); price = part.Price; }
+            {
+                price = ((part.Price) * (course) * ((100.00 - Convert.ToDouble(user.Discount)) / 100.00));
+                price = System.Math.Round((price),2);
+            }
             else
-            { part.Price = part.Price; price = part.Price;}
-            int quantity;
-            if (part.Group_Parts == "Тормозные диски")
+            { part.Price = part.Price; price = System.Math.Round((part.Price), 2); }
+            int quantity=0;
+            if (part.Group_Parts == "Zimmermann диски")
                 quantity = 2;
-            else if (part.Group_Parts == "Тормозные колодки")
+            else if (part.Group_Parts == "Zimmermann колодки")
                 quantity = 1;
             else
                 quantity = 1;
-        OrderDTO order = new OrderDTO() { AddressID=user.AddressID,Analogues=part.Analogues,Avenue=user.Avenue,
-                                             Brand=part.Brand,Comment="",Country=user.Country,Description=part.Description,
-                                             Foto_link=part.Foto_link,Group_Auto=part.Group_Auto,Group_Parts=part.Group_Parts,
-                                             OrderID=DateTime.Now.ToString(),IP="",Number=part.Number,PartID=part.ID,Price=price,Quantity=quantity,Sity=user.Sity};
+            _OrderDTO order = new _OrderDTO() { AddressID = UserID, Analogues = part.Analogues, Avenue = user.Avenue,
+                Brand = part.Brand, Comment = "", Country = user.Country, Description = part.Description,
+                Foto_link = part.Foto_link, Group_Auto = part.Group_Auto, Group_Parts = part.Group_Parts,
+                OrderID = HttpContext.Session.Id,IP="",Number=part.Number,PartID=part.ID,Price=price,Quantity=quantity,Sity=user.Sity};
+            db.Add(order);
+            db.SaveChanges();
             orders.Add(order);
             return orders;
         }
-        private List<OrderDTO> AddParts(int PartID, List<OrderDTO> orders)
+        [NonAction]
+        private List<_OrderDTO> AddParts(int PartID)
         {
-            List<OrderDTO> orders = new List<OrderDTO>();
+            
             var part = repo.GetParts(PartID);
             double course = Convert.ToDouble(repo.GetCourseEuro());
             double price;
-            var dis= from i in db.DefaultDiscounts
-                           select i.TheDefaultDiscount;
-            int discount = dis.FirstOrDefault();
+            int discount = (from i in db.DefaultDiscounts
+                           select i.TheDefaultDiscount).FirstOrDefault();
             if (discount != 0)
-            { part.Price = System.Math.Round(part.Price * course * ((100 - discount) / 100)); price = part.Price; }
-            else
-            { part.Price = part.Price; price = part.Price; }
-            int quantity;
-            if (part.Group_Parts == "Тормозные диски")
-                quantity = 2;
-            else if (part.Group_Parts == "Тормозные колодки")
-                quantity = 1;
-            else
-                quantity = 1;
-            OrderDTO order = new OrderDTO()
             {
+                price = part.Price*course;
+                course = 100 - discount;course = course / 100;
+                part.Price = price*course;
+                part.Price = System.Math.Round((part.Price), 2);
+            }
+            else
+            {
+                part.Price = System.Math.Round((part.Price), 2);
+            }
+            int quantity =0;
+            if (part.Group_Parts == "Zimmermann диски")
+                quantity = 2;
+            else if (part.Group_Parts == "Zimmermann колодки")
+                quantity = 1;
+            else
+                quantity = 1;
+            
+            _OrderDTO order = new _OrderDTO()
+            {
+                
                 Analogues = part.Analogues,
                 Brand = part.Brand,
                 Comment = "",
@@ -317,15 +392,63 @@ namespace Auto_Parts_2019.Controllers
                 Foto_link = part.Foto_link,
                 Group_Auto = part.Group_Auto,
                 Group_Parts = part.Group_Parts,
-                OrderID = DateTime.Now.ToString(),
+                OrderID = HttpContext.Session.Id,
                 IP = "",
                 Number = part.Number,
                 PartID = part.ID,
-                Price = price,
+                Price = part.Price,
                 Quantity = quantity,
             };
+            db.Add(order);
+            db.SaveChanges();
             orders.Add(order);
             return orders;
+        }
+        [NonAction]
+        private IActionResult AddOrder(string coment)
+        {
+            _Order or = new _Order();
+            var order = from i in db._OrdersDTO
+                        where i.AddressID == userManager.GetUserId(User)
+                        select i;
+            List<string> text = new List<string>();
+            foreach(var i in order)
+            {
+                or.UserID = repo.GetUserID(i.AddressID);
+                or.AddressID = i.AddressID;
+                or.Avenue = i.Avenue;
+                or.Brand = i.Brand;
+                or.Comment = coment;
+                or.Country = i.Country;
+                or.Group_Parts = i.Group_Parts;
+                or.SessionID = HttpContext.Session.Id;
+                or.IP = i.IP;
+                or.Number = i.Number;
+                or.OneCCreate = false;
+                or.OrderID = i.OrderID;
+                or.PartID = i.PartID;
+                or.Price = i.Price;
+                or.Quantity = i.Quantity;
+                or.Sity = i.Sity;
+                text.Add($"Ваш заказ: Номер товара: {i.Number}; Количевство {i.Quantity}; Цена {i.Price} ;");
+                repo.Delete(i.OrderID);
+                repo.Create(or);
+                //db.Add(or);
+                //db.SaveChanges();
+            }
+           
+            string texts = null;
+            foreach (string s in text)
+            { texts = texts + s; }
+            texts = texts + $"Коментарий : {coment};";
+            SendMessage(userManager.GetUserId(User),"Заказ на сайте ttua.com.ua",texts);
+            EmailService email = new EmailService();
+            foreach (var i in db.Managers)
+            {
+                email.SendEmailAsync(i.Email,"Новый заказ на сайте ttua.com.ua",texts);
+            }
+
+            return Ok();
         }
     }
 }

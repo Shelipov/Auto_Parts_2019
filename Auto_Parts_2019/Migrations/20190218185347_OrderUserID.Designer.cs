@@ -10,16 +10,59 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Auto_Parts_2019.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190105113602_Course")]
-    partial class Course
+    [Migration("20190218185347_OrderUserID")]
+    partial class OrderUserID
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.1-rtm-30846")
+                .HasAnnotation("ProductVersion", "2.1.4-rtm-31024")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("Auto_Parts_2019.Models.Parts._Order", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("AddressID");
+
+                    b.Property<string>("Avenue");
+
+                    b.Property<string>("Brand");
+
+                    b.Property<string>("Comment");
+
+                    b.Property<string>("Country");
+
+                    b.Property<string>("Group_Parts");
+
+                    b.Property<string>("IP");
+
+                    b.Property<string>("Number");
+
+                    b.Property<bool>("OneCCreate");
+
+                    b.Property<string>("OrderID");
+
+                    b.Property<int>("PartID");
+
+                    b.Property<double>("Price");
+
+                    b.Property<int>("Quantity");
+
+                    b.Property<string>("SessionID");
+
+                    b.Property<string>("Sity");
+
+                    b.Property<string>("UserID");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("_Orders");
+                });
 
             modelBuilder.Entity("Auto_Parts_2019.Models.Parts.Course", b =>
                 {
@@ -61,6 +104,96 @@ namespace Auto_Parts_2019.Migrations
                     b.ToTable("Cross");
                 });
 
+            modelBuilder.Entity("Auto_Parts_2019.Models.Parts.Debit", b =>
+                {
+                    b.Property<int>("DebitID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("AdressID");
+
+                    b.Property<string>("UserID");
+
+                    b.Property<double>("debit");
+
+                    b.HasKey("DebitID");
+
+                    b.ToTable("Debits");
+                });
+
+            modelBuilder.Entity("Auto_Parts_2019.Models.Parts.DefaultDiscount", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("TheDefaultDiscount");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("DefaultDiscounts");
+                });
+
+            modelBuilder.Entity("Auto_Parts_2019.Models.Parts.DTO._OrderDTO", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("AddressID");
+
+                    b.Property<string>("Analogues");
+
+                    b.Property<string>("Avenue");
+
+                    b.Property<string>("Brand");
+
+                    b.Property<string>("Comment");
+
+                    b.Property<string>("Country");
+
+                    b.Property<string>("Description");
+
+                    b.Property<string>("Foto_link");
+
+                    b.Property<string>("Group_Auto");
+
+                    b.Property<string>("Group_Parts");
+
+                    b.Property<string>("IP");
+
+                    b.Property<string>("Number");
+
+                    b.Property<string>("OrderID");
+
+                    b.Property<int>("PartID");
+
+                    b.Property<double>("Price");
+
+                    b.Property<int>("Quantity");
+
+                    b.Property<string>("Sity");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("_OrdersDTO");
+                });
+
+            modelBuilder.Entity("Auto_Parts_2019.Models.Parts.Manager", b =>
+                {
+                    b.Property<int>("ManagerID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("AdressID");
+
+                    b.Property<string>("Email");
+
+                    b.HasKey("ManagerID");
+
+                    b.ToTable("Managers");
+                });
+
             modelBuilder.Entity("Auto_Parts_2019.Models.Parts.Part", b =>
                 {
                     b.Property<int>("ID")
@@ -80,6 +213,8 @@ namespace Auto_Parts_2019.Migrations
                     b.Property<string>("Group_Parts");
 
                     b.Property<string>("Number");
+
+                    b.Property<bool>("OneCCreate");
 
                     b.Property<double>("Price");
 
@@ -275,6 +410,8 @@ namespace Auto_Parts_2019.Migrations
                     b.Property<string>("IP");
 
                     b.Property<int>("Index");
+
+                    b.Property<bool>("OneCCreate");
 
                     b.Property<string>("Sity");
 

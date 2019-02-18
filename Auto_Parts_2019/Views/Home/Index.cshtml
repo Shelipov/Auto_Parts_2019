@@ -56,7 +56,7 @@
                 <img src="~/images/baner1.jpg" alt="Microsoft Azure" class="img-responsive" />
                 <div class="carousel-caption" role="option">
                     <p>
-                        Мы были очень рады Вашему посещению нашего стенда на выставке Автомеханика. Мы надеемся, что выставка была для Вас успешной.
+                        Стенд завода Otto-Zimmermann на выставке Автомеханика. Мы надеемся, что выставка была для Вас успешной.
                         <a class="btn btn-default" href="https://www.otto-zimmermann.de/ru/novosti/automechanika-2018/">
                             Узнать больше
                         </a>
@@ -146,33 +146,29 @@
         background-color: rgba(0,0,0,0.5); /*затемнитефон*/
     }
 </style>
-@using (Html.BeginForm("search", "Home", FormMethod.Post))
-{
-    <center>
 
-        <div style="width: 650px;">
-            <form id="number" class="text-left" action="/search/" method="post" name="number">
-                <input id="number" style="width: 80%; padding: 10px 50px 10px 12px; font-size: 16px; border: 2px solid #6699cc; border-radius: 25px; background-color: #f8f8f8;" name="number" type="text" value="" placeholder="Поиск по номеру">
-                <button style="position: relative; padding: 5px; left: -71px; border: 2px solid #6699cc; border-radius: 20px; font-size: 16px; color: #fff; cursor: pointer; background: #6699cc;" title="Поиск" type="submit">Поиск</button>
+        <div>
+            <form id="number" class="text-left" action="/search/" method="post" name="number" style="position: relative; margin-bottom: 10px;">
+                <input id="number" style="width: 100%; padding: 10px 50px 10px 12px; font-size: 16px; border: 2px solid #6699cc; border-radius: 25px; background-color: #f8f8f8;" name="number" type="text" value="" placeholder="Поиск по номеру">
+                <button style="position: absolute; top: 5px; right:5px; padding: 5px; border: 2px solid #6699cc; border-radius: 20px; font-size: 16px; color: #fff; cursor: pointer; background: #6699cc;" title="Поиск" type="submit">Поиск</button>
             </form>
         </div>
-    </center>
-}
+
 <table class="table">
     <thead>
         <tr>
 
             <th>
-                <h2>Номер</h2>  @*@Html.DisplayNameFor(model => model.Number)*@
+                <h3>Номер</h3>  
             </th>
             <th>
-                <h2>Описание</h2>  @*@Html.DisplayNameFor(model => model.Description)*@
+                <h3>Описание</h3>  
             </th>
             <th>
-                <h2>Цена</h2>  @*@Html.DisplayNameFor(model => model.Price)*@
+                <h3>Цена</h3>  
             </th>
             <th>
-                <h2>Фото</h2>  @*@Html.DisplayNameFor(model => model.Foto_link)*@
+                <h3>Фото</h3>  
             </th>
             <th></th>
         </tr>
@@ -185,7 +181,7 @@
             <tr>
 
                 <td>
-                    @Html.DisplayFor(modelItem => item.Number)
+                    <strong>@Html.DisplayFor(modelItem => item.Number)</strong>
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Description)

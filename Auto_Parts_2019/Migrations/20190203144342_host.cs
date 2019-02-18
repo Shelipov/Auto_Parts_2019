@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Auto_Parts_2019.Migrations
 {
-    public partial class First : Migration
+    public partial class host : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -42,14 +42,15 @@ namespace Auto_Parts_2019.Migrations
                     LockoutEnabled = table.Column<bool>(nullable: false),
                     AccessFailedCount = table.Column<int>(nullable: false),
                     Discriminator = table.Column<string>(nullable: false),
-                    AddressID = table.Column<int>(nullable: true),
+                    AddressID = table.Column<string>(nullable: true),
                     Country = table.Column<string>(nullable: true),
                     Sity = table.Column<string>(nullable: true),
                     Avenue = table.Column<string>(nullable: true),
                     Index = table.Column<int>(nullable: true),
                     IP = table.Column<string>(nullable: true),
                     Discount = table.Column<int>(nullable: true),
-                    UserIDId = table.Column<string>(nullable: true)
+                    UserIDId = table.Column<string>(nullable: true),
+                    OneCCreate = table.Column<bool>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -79,6 +80,46 @@ namespace Auto_Parts_2019.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "DefaultDiscounts",
+                columns: table => new
+                {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    TheDefaultDiscount = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DefaultDiscounts", x => x.ID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OrdersDTO",
+                columns: table => new
+                {
+                    OrderID = table.Column<string>(nullable: false),
+                    PartID = table.Column<int>(nullable: false),
+                    Number = table.Column<string>(nullable: true),
+                    Brand = table.Column<string>(nullable: true),
+                    Price = table.Column<double>(nullable: false),
+                    Foto_link = table.Column<string>(nullable: true),
+                    Group_Parts = table.Column<string>(nullable: true),
+                    Description = table.Column<string>(nullable: true),
+                    Quantity = table.Column<int>(nullable: false),
+                    Analogues = table.Column<string>(nullable: true),
+                    Group_Auto = table.Column<string>(nullable: true),
+                    AddressID = table.Column<string>(nullable: true),
+                    Country = table.Column<string>(nullable: true),
+                    Sity = table.Column<string>(nullable: true),
+                    Avenue = table.Column<string>(nullable: true),
+                    IP = table.Column<string>(nullable: true),
+                    Comment = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OrdersDTO", x => x.OrderID);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Parts",
                 columns: table => new
                 {
@@ -92,7 +133,8 @@ namespace Auto_Parts_2019.Migrations
                     Description = table.Column<string>(nullable: true),
                     Quantity = table.Column<int>(nullable: false),
                     Analogues = table.Column<string>(nullable: true),
-                    Group_Auto = table.Column<string>(nullable: true)
+                    Group_Auto = table.Column<string>(nullable: true),
+                    OneCCreate = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -205,6 +247,84 @@ namespace Auto_Parts_2019.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "CartLine",
+                columns: table => new
+                {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    PartID = table.Column<int>(nullable: true),
+                    Quantity = table.Column<int>(nullable: false),
+                    DateLastModified = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CartLine", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_CartLine_Parts_PartID",
+                        column: x => x.PartID,
+                        principalTable: "Parts",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Courses",
+                columns: table => new
+                {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CourseEuro = table.Column<double>(nullable: false),
+                    CourseDollar = table.Column<double>(nullable: false),
+                    DateLastModified = table.Column<DateTime>(nullable: false),
+                    PartID = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Courses", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_Courses_Parts_PartID",
+                        column: x => x.PartID,
+                        principalTable: "Parts",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Orders",
+                columns: table => new
+                {
+                    OrderID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CartLineID = table.Column<int>(nullable: true),
+                    PartID = table.Column<int>(nullable: true),
+                    AddressId = table.Column<string>(nullable: true),
+                    Comment = table.Column<string>(nullable: true),
+                    OneCCreate = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Orders", x => x.OrderID);
+                    table.ForeignKey(
+                        name: "FK_Orders_AspNetUsers_AddressId",
+                        column: x => x.AddressId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Orders_CartLine_CartLineID",
+                        column: x => x.CartLineID,
+                        principalTable: "CartLine",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Orders_Parts_PartID",
+                        column: x => x.PartID,
+                        principalTable: "Parts",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -248,6 +368,31 @@ namespace Auto_Parts_2019.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CartLine_PartID",
+                table: "CartLine",
+                column: "PartID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Courses_PartID",
+                table: "Courses",
+                column: "PartID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Orders_AddressId",
+                table: "Orders",
+                column: "AddressId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Orders_CartLineID",
+                table: "Orders",
+                column: "CartLineID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Orders_PartID",
+                table: "Orders",
+                column: "PartID");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -268,16 +413,31 @@ namespace Auto_Parts_2019.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "Courses");
+
+            migrationBuilder.DropTable(
                 name: "Cross");
 
             migrationBuilder.DropTable(
-                name: "Parts");
+                name: "DefaultDiscounts");
+
+            migrationBuilder.DropTable(
+                name: "Orders");
+
+            migrationBuilder.DropTable(
+                name: "OrdersDTO");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "CartLine");
+
+            migrationBuilder.DropTable(
+                name: "Parts");
         }
     }
 }

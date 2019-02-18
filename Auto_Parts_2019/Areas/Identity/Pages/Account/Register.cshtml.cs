@@ -107,6 +107,7 @@ namespace Auto_Parts_2019.Areas.Identity.Pages.Account
                     UserName = Input.UserName,
                     Email = Input.Email,
                     PhoneNumber = Input.PhoneNumber,
+                    //Id=user.Id,
                     AddressID = user.Id,Country=Input.Country,
                                         Sity=Input.Sity, Avenue=Input.Avenue,Index=Input.Index};
                 //_context.Add(user);
