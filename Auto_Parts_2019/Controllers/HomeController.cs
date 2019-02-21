@@ -78,6 +78,24 @@ namespace Auto_Parts_2019.Controllers
             else
                 return Redirect("~/Identity/Account/Register");
         }
+
+        [Route("editbasket")]
+        [HttpPost]
+        public void EditBasket(int PartID,int Quantity)
+        {           
+                var order = from i in db._OrdersDTO
+                            where i.AddressID == userManager.GetUserId(User)
+                            select i;
+            foreach(var or in order)
+            {
+                if(or.ID==PartID)
+                {
+                    or.Quantity = Quantity;
+                    db.Update(or);  
+                }
+            }
+            db.SaveChanges();
+        }
         //[Route("add/{coments}")]
         [HttpPost]
         public IActionResult Create_Basket(string comment)   //(List<OrderDTO> list)

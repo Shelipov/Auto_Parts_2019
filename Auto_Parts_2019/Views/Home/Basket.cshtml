@@ -41,7 +41,6 @@
             @foreach (var item in Model)
             {
                 <tr>
-
                     <td>
                         <strong>@Html.DisplayFor(modelItem => item.Number)</strong>
                     </td>
@@ -57,24 +56,25 @@
                         </a>
                     </td>
                     <td>
-                        <input type="number" step="1" min="0" max="10" value="@Html.DisplayFor(modelItem => item.Quantity)"/> шт.
+                        
+                        <input type="number" step="1" min="0" max="10" data-id="@item.ID" class="cnt" value="@Html.DisplayFor(modelItem => item.Quantity)" /> шт.
                     </td>
-
-                    <td>
-                        @*<input type="number" step="1" min="0" max="10" value="2" id="@item.Quantity" name="@item.Quantity" />*@
-                        @*<a asp-action="Edit" asp-route-id="@item.Quantity">Изменить</a>*@
-                        @*<a asp-action="Delete" asp-route-id="@item.Number">Удалить</a>*@
-                    </td>
+                   
                 </tr>
+
             }
+            
         </tbody>
     </table>
+
     <html>
     <body>
 
 
         <script type="text/javascript" src="~/simplebox/simplebox.js"></script>
+
         <script type="text/javascript">
+
             (function () {
                 var boxes = [], els, i, l;
                 if (document.querySelectorAll) {
@@ -91,29 +91,21 @@
 
 
             })();
+
         </script>
     </body>
 </html>
 
 <div class="row">
     <div class="col-md-4">
-        @*<form asp-action="Create_Basket" asp-controller="Home" method="post" enctype="multipart/form-data">
-            <div class="form-group">
-                <textarea asp-for=@model.Comment placeholder="Написать коментарий" cols="100" rows="10"></textarea>
-                <span asp-validation-for=@model.Comment class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Отправить заказ" class="btn btn-default" id="btnUpload" />
-            </div>
-        </form>*@
-        @*<form asp-action="addcoments" asp-controller="Home" method="post" enctype="multipart/form-data">*@
+        
         <form asp-action="Create_Basket" method="post">
             <p>
                 <label for="comment">Ваш комментарий:</label><br />
                 <textarea name="comment" id="comment" cols="100" rows="10" placeholder="Не более 200 символов" maxlength="200"></textarea>
             </p>
             <p>
-                <input type="submit" value="Добавить" />
+                <input type="submit" value="Заказать" />
             </p>
         </form>
     </div>
