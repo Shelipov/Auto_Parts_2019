@@ -5,96 +5,41 @@
     }
 
     <h2>Корзина</h2>
-
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <title></title>
         <link href="~/simplebox/simplebox.css" rel="stylesheet">
+        <link href="~/js/basket.js" aria- />
     </head>
     <table class="table">
-        <thead>
-            <tr>
-
-                <th>
-                    <h3>Номер</h3>
-                </th>
-                <th>
-                    <h3>Описание</h3>
-                </th>
-                <th>
-                    <h3>Цена</h3>
-                </th>
-                <th>
-                    <h3>Фото</h3>
-                </th>
-
-                <th>
-                    <h3>Кол.</h3>
-                </th>
-
-                <th></th>
-            </tr>
-        </thead>
         <tbody>
             @foreach (var item in Model)
             {
-                <tr>
-                    <td>
-                        <strong>@Html.DisplayFor(modelItem => item.Number)</strong>
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Description)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Price) грн.
-                    </td>
-                    <td>
-                        <a rel="simplebox" href="~/images/Foto_Zimmermann/Foto_Zimmermann/@item.Foto_link.Replace(@"\",@"/").Replace(@"~/images/Foto_Zimmermann/Foto_Zimmermann/","").ToString()">
-                            <img src="~/images/Foto_Zimmermann/Foto_Zimmermann/@item.Foto_link.Replace(@"\",@"/").Replace(@"~/images/Foto_Zimmermann/Foto_Zimmermann/","").ToString()" class="img-responsive" width="150" height="150" />
-                        </a>
-                    </td>
-                    <td>
-                        
-                        <input type="number" step="1" min="0" max="10" data-id="@item.ID" class="cnt" value="@Html.DisplayFor(modelItem => item.Quantity)" /> шт.
-                    </td>
-                   
-                </tr>
+            <tr>
+                <td>
+                    <strong>@Html.DisplayFor(modelItem => item.Number)</strong>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price) грн.
+                </td>                
+                <td>
+                    <input type="number" step="1" min="0" max="10" data-id="@item.ID" class="cnt" value="@Html.DisplayFor(modelItem => item.Quantity)"/> шт.
+                </td>
+                <td>
+                    <a asp-action="DeleteBasket" asp-route-PartID="@item.ID">Удалить</a>
+                </td>
+            </tr>
 
-            }
-            
+            } 
         </tbody>
     </table>
 
-    <html>
-    <body>
-
-
-        <script type="text/javascript" src="~/simplebox/simplebox.js"></script>
-
-        <script type="text/javascript">
-
-            (function () {
-                var boxes = [], els, i, l;
-                if (document.querySelectorAll) {
-                    els = document.querySelectorAll('a[rel=simplebox]');
-
-                    Box.getStyles('simplebox_css', '~/simplebox/simplebox.css');
-                    Box.getScripts('simplebox_js', '~/simplebox/simplebox.js', function () {
-                        simplebox.init();
-                        for (i = 0, l = els.length; i < l; ++i)
-                            simplebox.start(els[i]);
-                        simplebox.start('a[rel=simplebox_group]');
-                    });
-                }
-
-
-            })();
-
-        </script>
-    </body>
-</html>
+    
 
 <div class="row">
     <div class="col-md-4">
@@ -102,7 +47,7 @@
         <form asp-action="Create_Basket" method="post">
             <p>
                 <label for="comment">Ваш комментарий:</label><br />
-                <textarea name="comment" id="comment" cols="100" rows="10" placeholder="Не более 200 символов" maxlength="200"></textarea>
+                <textarea name="comment" id="comment" style="width:100%" rows="10" placeholder="Не более 200 символов" maxlength="200"></textarea>
             </p>
             <p>
                 <input type="submit" value="Заказать" />

@@ -29,7 +29,7 @@ namespace Auto_Parts_2019.Models
 
             using (var client = new SmtpClient())
             {
-                await client.ConnectAsync("smtp.gmail.com", 465, true);
+                await client.ConnectAsync("localhost", 25, false); //scp.realhost.pro
                 await client.AuthenticateAsync(emails, password);
                 await client.SendAsync(emailMessage);
 

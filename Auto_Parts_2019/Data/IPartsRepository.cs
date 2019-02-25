@@ -33,7 +33,7 @@ namespace Auto_Parts_2019.Data
         {
             using (IDbConnection db = new SqlConnection(connectionString))
             {
-                var result = db.Query<Part>("select * from Parts order by Parts.Quantity desc").ToList();
+                var result = db.Query<Part>("select * from Parts where Parts.Quantity > 0 order by Parts.Quantity desc ").ToList();
                 return result;
             }
         }
@@ -69,10 +69,17 @@ namespace Auto_Parts_2019.Data
                 var analog = db.Query<Part>("select [Analogues] from [Parts] where [Number]= @num", new { num }).FirstOrDefault();
                 string an = analog.Analogues.ToString();
                 var parts = db.Query<Part>("select * from [Parts] where [Analogues] = @an", new { an });
-                
+
                 if (parts != null)
+                {
+                    foreach(var i in parts)
+                    {
+                        if (i.Quantity > 4)
+                            i.Quantity = 4;
+                    }
                     return parts;
-                
+                }
+
                 else return null;
             }
         }

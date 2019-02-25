@@ -33,57 +33,61 @@
                 </th>
             </tr>
         </thead>
+        
         <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>
-                        <strong>@Html.DisplayFor(modelItem => item.Number)</strong>
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Description)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Price) грн.
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Quantity) шт.
-                    </td>
-                    <td>
-                        @if (item.Foto_link != null)
-                        {
-
+            
+                @foreach (var item in Model)
+                {
+                    <tr>
                         <td>
-                            <a rel="simplebox" href="~/images/Foto_Zimmermann/Foto_Zimmermann/@item.Foto_link.Replace(@"\",@"/").Replace(@"~/images/Foto_Zimmermann/Foto_Zimmermann/","").ToString()">
-                                <img src="~/images/Foto_Zimmermann/Foto_Zimmermann/@item.Foto_link.Replace(@"\",@"/").Replace(@"~/images/Foto_Zimmermann/Foto_Zimmermann/","").ToString()" class="img-responsive" width="150" height="150" />
-                            </a>
-
+                            <strong>@Html.DisplayFor(modelItem => item.Number)</strong>
                         </td>
-                    }
-                    else
-                    {
                         <td>
-                            <a rel="simplebox" href="~/images/Foto_Zimmermann/Foto_Zimmermann/NoFoto.jpg">
-                                <img src="~/images/Foto_Zimmermann/Foto_Zimmermann/NoFoto.jpg" class="img-responsive" width="150" height="150" />
-                            </a>
-
+                            @Html.DisplayFor(modelItem => item.Description)
                         </td>
-
-                    }
-
-
                         <td>
-                            <a asp-action="addtocart" asp-route-PartID="@item.ID" asp-route-UserID="@UserManager.GetUserId(User)">В корзину</a>
+                            @Html.DisplayFor(modelItem => item.Price) грн.
                         </td>
-                    </tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Quantity) шт.
+                        </td>
+                        <td>
+                            @if (item.Foto_link != null)
+                            {
+
+                            <td>
+                                <a rel="simplebox" href="~/images/Foto_Zimmermann/Foto_Zimmermann/@item.Foto_link.Replace(@"\", @"/").Replace(@"~/images/Foto_Zimmermann/Foto_Zimmermann/", "").ToString()">
+                                    <img src="~/images/Foto_Zimmermann/Foto_Zimmermann/@item.Foto_link.Replace(@"\", @"/").Replace(@"~/images/Foto_Zimmermann/Foto_Zimmermann/", "").ToString()" class="img-responsive" width="150" height="150" />
+                                </a>
+
+                            </td>
+                            }
+                            else
+                            {
+                            <td>
+                                <a rel="simplebox" href="~/images/Foto_Zimmermann/Foto_Zimmermann/NoFoto.jpg">
+                                    <img src="~/images/Foto_Zimmermann/Foto_Zimmermann/NoFoto.jpg" class="img-responsive" width="150" height="150" />
+                                </a>
+
+                            </td>
+
+                            }
+
+
+                            <td>
+                                <a asp-action="addtocart" asp-route-PartID="@item.ID" asp-route-UserID="@UserManager.GetUserId(User)">В корзину</a>
+                            </td>
+                        </tr>
                 }
-        </tbody>
+            
+            </tbody>
+        
     </table>
     <div>
         <a asp-controller="Home" asp-action="About">Поиск по каталогу</a>
     </div>
     <div>
-        <a asp-controller="Home" asp-action="Index">Назад</a>
+        <a asp-controller="Home" asp-action="Index">На Главую</a>
     </div>
     <html>
     <body>

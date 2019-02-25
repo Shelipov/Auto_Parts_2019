@@ -30,16 +30,13 @@ namespace Auto_Parts_2019.Controllers
         const string SessionId = "_Id";
         public HomeController(ApplicationDbContext db,IPartsRepository _repo, SignInManager<IdentityUser> _signInManager, UserManager<IdentityUser> _userManager)
         {
-           
             this.db = db;
             repo = _repo;
-            
             signInManager = _signInManager;
             userManager = _userManager;
-            
         }
 
-        //[ResponseCache(Location = ResponseCacheLocation.Any, Duration = 300)]
+
         public  IActionResult Index(int page = 1)
         {
             if (User.Identity.IsAuthenticated)
@@ -48,23 +45,33 @@ namespace Auto_Parts_2019.Controllers
             }
             else
                 return View(GetParts(page));
-
         }
         
         
         [Route("addtocart")]
         public IActionResult AddToCart(int PartID )
         {
-
             if (User.Identity.IsAuthenticated)
             {
                 AddParts(PartID, userManager.GetUserId(User));
                 return Redirect("~/basket");
             }
             else
-                return Redirect("~/Identity/Account/Register");
+                return Redirect("~/Identity/Account/Login");
 
         }
+        [Route("addtocarts")]
+        public IActionResult AddToCarts(int PartID)
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                AddParts(PartID, userManager.GetUserId(User));
+                return Redirect("~/Home/About");
+            }
+            else
+                return Redirect("~/Identity/Account/Login");
+        }
+
         [Route("basket")]
         public IActionResult Basket()
         {
@@ -76,7 +83,7 @@ namespace Auto_Parts_2019.Controllers
                 return View(order);
             }
             else
-                return Redirect("~/Identity/Account/Register");
+                return Redirect("~/Identity/Account/Login");
         }
 
         [Route("editbasket")]
@@ -96,15 +103,35 @@ namespace Auto_Parts_2019.Controllers
             }
             db.SaveChanges();
         }
-        //[Route("add/{coments}")]
+
+        [Route("deletebasket")]
+        [HttpGet]
+        public IActionResult DeleteBasket(int PartID)
+        {
+            var order = from i in db._OrdersDTO
+                        where i.AddressID == userManager.GetUserId(User)
+                        select i;
+            foreach (var or in order)
+            {
+                if (or.ID == PartID)
+                {
+                    
+                    db.Remove(or);
+                }
+            }
+            db.SaveChanges();
+            return Redirect("~/basket");
+        } 
+
+
         [HttpPost]
-        public IActionResult Create_Basket(string comment)   //(List<OrderDTO> list)
+        public IActionResult Create_Basket(string comment)
         {
             AddOrder(comment);
             return Redirect("~/Home/Index");
         }
 
-        //[ResponseCache(Location = ResponseCacheLocation.Any, Duration = 300)]
+        
         [HttpPost("search")]
         public IActionResult Search(string number)
         {
@@ -134,7 +161,36 @@ namespace Auto_Parts_2019.Controllers
             }
             
         }
-        
+
+        [HttpPost("aboutsearch")]
+        public IActionResult AboutSearch(string number)
+        {
+            try
+            {
+                if (User.Identity.IsAuthenticated)
+                {
+                    var result = Search_num(number, userManager.GetUserId(User));
+                    if (result != null)
+                        return View(result);
+                    else
+                    { return Redirect("~/Home/About"); }
+                }
+                else
+                {
+                    var result = Search_num(number);
+                    if (result != null)
+                        return View(result);
+                    else
+                    { return Redirect("~/Home/About"); }
+                }
+            }
+            catch (Exception ex)
+            {
+                return Redirect("~/Home/Index");
+            }
+
+        }
+
         [NonAction]
         private async Task<bool> SendMessage(string id, string text, string name)
         {
@@ -153,7 +209,7 @@ namespace Auto_Parts_2019.Controllers
             }
         }
 
-        [ResponseCache(Location = ResponseCacheLocation.Any, Duration = 300)]
+        
         public IActionResult About()
         {
             ViewData["Message"] = "Your application description page.";
@@ -161,19 +217,19 @@ namespace Auto_Parts_2019.Controllers
             return View();
         }
 
-        //[ResponseCache(Location = ResponseCacheLocation.Any, Duration = 300)]
+        
         public IActionResult Contact()
         {
             return View();
         }
 
-        //[ResponseCache(Location = ResponseCacheLocation.Any, Duration = 300)]
+        
         public IActionResult Privacy()
         {
             return View();
         }
 
-        //[ResponseCache(Location = ResponseCacheLocation.Any, Duration = 300)]
+        
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
@@ -315,7 +371,7 @@ namespace Auto_Parts_2019.Controllers
             return returnModel;
         }
 
-        [ResponseCache(Location = ResponseCacheLocation.Any, Duration = 300)]
+        [HttpGet("getdata")]
         public JsonResult GetData()
         {
             // создадим список данных
@@ -425,6 +481,7 @@ namespace Auto_Parts_2019.Controllers
         [NonAction]
         private IActionResult AddOrder(string coment)
         {
+            double summ = 0; 
             _Order or = new _Order();
             var order = from i in db._OrdersDTO
                         where i.AddressID == userManager.GetUserId(User)
@@ -448,17 +505,17 @@ namespace Auto_Parts_2019.Controllers
                 or.Price = i.Price;
                 or.Quantity = i.Quantity;
                 or.Sity = i.Sity;
-                text.Add($"Ваш заказ: Номер товара: {i.Number}; Количевство {i.Quantity}; Цена {i.Price} ;");
+                text.Add($"<strong>Номер товара:</strong> {i.Number}; <strong>Количевство: </strong> {i.Quantity}; <strong>Цена: </strong> {i.Price} ; <br>");
+                summ = summ + (i.Quantity * i.Price);
                 repo.Delete(i.OrderID);
                 repo.Create(or);
-                //db.Add(or);
-                //db.SaveChanges();
+                
             }
            
             string texts = null;
             foreach (string s in text)
             { texts = texts + s; }
-            texts = texts + $"Коментарий : {coment};";
+            texts = "<h3>Ваш заказ:</h3> <br> "+ texts + $"<strong>Коментарий :</strong> {coment};<br>" + $"<strong>Общая сумма:</strong> {summ} грн. ";
             SendMessage(userManager.GetUserId(User),"Заказ на сайте ttua.com.ua",texts);
             EmailService email = new EmailService();
             foreach (var i in db.Managers)

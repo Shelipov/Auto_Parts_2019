@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -34,8 +38,11 @@
                 <ul class="nav navbar-nav">
                     <li><a asp-area="" asp-controller="Home" asp-action="Index">Главная</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="About">Каталог</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="Contact">Контакты</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="Basket">Корзина</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="Contact">Контакты <span class="badge">050-725-93-53,068-230-56-53</span></a></li>
+                    @if (SignInManager.IsSignedIn(User))
+                    {
+                        <li><a asp-area="" asp-controller="Home" asp-action="Basket">Корзина  <span id="span" class="badge"></span></a></li>
+                    }
                 </ul>
                 <partial name="_LoginPartial" />
             </div>
@@ -75,8 +82,8 @@
         </script>
         <script src="~/js/site.min.js" asp-append-version="true"></script>
     </environment>
-
     @RenderSection("Scripts", required: false)
+
     <script type="text/javascript" src="/simplebox_util.js"></script>
     <script type="text/javascript">
         (function () {
@@ -95,6 +102,39 @@
 
 
         })();
+    </script>
+    <script type="text/javascript">
+        function postCnt() {
+            var _id = parseInt($(this).data('id')),
+                _cnt = parseInt($(this).val());
+            $.post(
+                '/editbasket',
+                { PartID: _id, Quantity: _cnt },
+                function (ans) {
+                    console.log(ans);
+                },
+                'json'
+            );
+        }
+
+        $('.cnt').change(postCnt).keyup(postCnt);
+    </script>
+    <script>
+        var request = new XMLHttpRequest();
+        request.open("GET", "/basket", false);
+        request.send();
+        var text = request.responseText;
+        var exp = /PartID=[а-я]*/gi;
+        var result = text.match(exp);
+        var count = -1;
+        result.forEach(function (value, index, array) {
+            count++;
+        });
+        if (count > 0) {
+            var el = document.getElementById("span");
+            el.innerText = count;
+        }
+
     </script>
 </body>
 
