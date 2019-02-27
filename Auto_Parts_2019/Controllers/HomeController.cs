@@ -515,12 +515,13 @@ namespace Auto_Parts_2019.Controllers
             string texts = null;
             foreach (string s in text)
             { texts = texts + s; }
-            texts = "<h3>Ваш заказ:</h3> <br> "+ texts + $"<strong>Коментарий :</strong> {coment};<br>" + $"<strong>Общая сумма:</strong> {summ} грн. ";
-            SendMessage(userManager.GetUserId(User),"Заказ на сайте ttua.com.ua",texts);
+            string textsuser = EmailFace.Up+$"Ув. {userManager.GetUserName(User)} - спасибо, что разместили заказ на нашем сайте.<br>"+"<h3>Ваш заказ:</h3> <br> "+ texts + $"<strong>Коментарий :</strong> {coment};<br>" + $"<strong>Общая сумма:</strong> {summ} грн.<br> Хорошего, Вам, дня!<br> С Ув. Команда ООО 'Тех-Трейд Украина'.<br>"+EmailFace.Down;
+            string textorder = EmailFace.Up + $"Ув. {userManager.GetUserName(User)} - сделал новый заказ сайте.<br>" + "<h3>Заказ:</h3> <br> " + texts + $"<strong>Коментарий :</strong> {coment};<br>" + $"<strong>Общая сумма:</strong> {summ} грн.<br> Хорошего вам дня!<br> С Ув. Команда ООО 'Тех-Трейд Украина'.<br>" + EmailFace.Down;
+            SendMessage(userManager.GetUserId(User),"Заказ на сайте ttua.com.ua",textsuser);
             EmailService email = new EmailService();
             foreach (var i in db.Managers)
             {
-                email.SendEmailAsync(i.Email,"Новый заказ на сайте ttua.com.ua",texts);
+                email.SendEmailAsync(i.Email,"Новый заказ на сайте ttua.com.ua", textorder);
             }
 
             return Ok();

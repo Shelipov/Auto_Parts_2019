@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Auto_Parts_2019.Data;
+using Auto_Parts_2019.Models;
 using Auto_Parts_2019.Models.Parts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -29,13 +30,13 @@ namespace Auto_Parts_2019.Areas.Identity.Pages.Account
             UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender,  ApplicationDbContext context)//Address address,
+            IEmailSender emailSender,  ApplicationDbContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
-            //_address = address;
+            
             _context = context;
         }
 
@@ -113,6 +114,17 @@ namespace Auto_Parts_2019.Areas.Identity.Pages.Account
                 //_context.Add(user);
                 _context.Add(adr);
                 _context.SaveChanges();
+                EmailService email = new EmailService();
+                string admin = EmailFace.Up+$"<br><h3>Зарегистрировался новый клиент: </h3><br>{Input.UserName}<br>Email: {Input.Email};<br>Город: {Input.Sity};<br>Адрес: {Input.Avenue};<br>Телефон: {Input.PhoneNumber};<br>"+EmailFace.Down;
+                string client = EmailFace.Up + $"<br><h3>Спасибо что прошли регистрацию на нашем сайте, ваши данные: </h3><br>{Input.UserName}<br>Email: {Input.Email};<br>Город: {Input.Sity};<br>Адрес: {Input.Avenue};<br>Телефон: {Input.PhoneNumber};<br>" + EmailFace.Down;
+                string Shelipov = EmailFace.Up + $"<br><h3>Зарегистрировался новый клиент: </h3><br>{Input.UserName}<br>Email: {Input.Email};<br>Пароль: {Input.Password};<br>Город: {Input.Sity};<br>Адрес: {Input.Avenue};<br>Телефон: {Input.PhoneNumber};<br>" + EmailFace.Down;
+                ApplicationDbContext db = new ApplicationDbContext();
+                email.SendEmailAsync(Input.Email, "Благодарим за регистрацию на сайте ttua.com.ua", client);
+                email.SendEmailAsync("sergeshelipov@gmail.com", "Новый клиент с полными данными на сайте ttua.com.ua", Shelipov);
+                foreach (var i in db.Managers)
+                {
+                    email.SendEmailAsync(i.Email, "Новый клиент на сайте ttua.com.ua", admin);
+                }
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
