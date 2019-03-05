@@ -68,8 +68,8 @@ namespace Auto_Parts_2019.Data
                 string num = numbers.Number.ToString();
                 var analog = db.Query<Part>("select [Analogues] from [Parts] where [Number]= @num", new { num }).FirstOrDefault();
                 string an = analog.Analogues.ToString();
-                var parts = db.Query<Part>("select * from [Parts] where [Analogues] = @an", new { an });
-
+                var parts = db.Query<Part>("select * from [Parts] where [Analogues] = @an AND Quantity > 0 ", new { an });
+                
                 if (parts != null)
                 {
                     foreach(var i in parts)
@@ -119,7 +119,7 @@ namespace Auto_Parts_2019.Data
         {
             using (IDbConnection db = new SqlConnection(connectionString))
             {
-                var sqlQuery = "UPDATE Parts SET Name = @Name, Age = @Age WHERE Id = @Id";
+                var sqlQuery = "UPDATE Parts SET Name = @Name, Quantity = @Quantity WHERE Id = @Id";
                 db.Execute(sqlQuery, new { Part });
             }
         }

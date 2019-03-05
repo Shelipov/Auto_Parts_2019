@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Encodings.Web;
+using System.Threading;
 using System.Threading.Tasks;
 using Auto_Parts_2019.Data;
 using Auto_Parts_2019.Models;
@@ -108,23 +109,17 @@ namespace Auto_Parts_2019.Areas.Identity.Pages.Account
                     UserName = Input.UserName,
                     Email = Input.Email,
                     PhoneNumber = Input.PhoneNumber,
-                    //Id=user.Id,
+                    NormalizedEmail=user.NormalizedEmail,NormalizedUserName=user.NormalizedUserName,
                     AddressID = user.Id,Country=Input.Country,
                                         Sity=Input.Sity, Avenue=Input.Avenue,Index=Input.Index};
                 //_context.Add(user);
+                Send(adr, Input.Password);
                 _context.Add(adr);
                 _context.SaveChanges();
-                EmailService email = new EmailService();
-                string admin = EmailFace.Up+$"<br><h3>Зарегистрировался новый клиент: </h3><br>{Input.UserName}<br>Email: {Input.Email};<br>Город: {Input.Sity};<br>Адрес: {Input.Avenue};<br>Телефон: {Input.PhoneNumber};<br>"+EmailFace.Down;
-                string client = EmailFace.Up + $"<br><h3>Спасибо что прошли регистрацию на нашем сайте, ваши данные: </h3><br>{Input.UserName}<br>Email: {Input.Email};<br>Город: {Input.Sity};<br>Адрес: {Input.Avenue};<br>Телефон: {Input.PhoneNumber};<br>" + EmailFace.Down;
-                string Shelipov = EmailFace.Up + $"<br><h3>Зарегистрировался новый клиент: </h3><br>{Input.UserName}<br>Email: {Input.Email};<br>Пароль: {Input.Password};<br>Город: {Input.Sity};<br>Адрес: {Input.Avenue};<br>Телефон: {Input.PhoneNumber};<br>" + EmailFace.Down;
-                ApplicationDbContext db = new ApplicationDbContext();
-                email.SendEmailAsync(Input.Email, "Благодарим за регистрацию на сайте ttua.com.ua", client);
-                email.SendEmailAsync("sergeshelipov@gmail.com", "Новый клиент с полными данными на сайте ttua.com.ua", Shelipov);
-                foreach (var i in db.Managers)
-                {
-                    email.SendEmailAsync(i.Email, "Новый клиент на сайте ttua.com.ua", admin);
-                }
+                Debit debit = new Debit(); debit.AdressID = adr.AddressID;debit.UserID = user.Id; debit.debit = 0.0;
+                _context.Add(debit);
+                _context.SaveChanges();
+                
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
@@ -148,9 +143,24 @@ namespace Auto_Parts_2019.Areas.Identity.Pages.Account
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
             }
-
+            
+            
+            
             // If we got this far, something failed, redisplay form
             return Page();
+        }
+        private  async void Send(Address adr, string pas)
+        {
+                EmailService email = new EmailService();
+                string admin = EmailFace.Up + $"<br><h3>Зарегистрировался новый клиент: </h3><br>{adr.UserName}<br>Email: {adr.Email};<br>Город: {adr.Sity};<br>Адрес: {adr.Avenue};<br>Телефон: {adr.PhoneNumber};<br>" + EmailFace.Down;
+                string client = EmailFace.Up + $"<br><h3>Спасибо что прошли регистрацию на нашем сайте, ваши данные: </h3><br>{adr.UserName}<br>Email: {adr.Email};<br>Город: {adr.Sity};<br>Адрес: {adr.Avenue};<br>Телефон: {adr.PhoneNumber};<br>" + EmailFace.Down;
+                string Shelipov = EmailFace.Up + $"<br><h3>Зарегистрировался новый клиент: </h3><br>{Input.UserName}<br>Email: {adr.Email};<br>Пароль: {pas};<br>Город: {adr.Sity};<br>Адрес: {adr.Avenue};<br>Телефон: {adr.PhoneNumber};<br>" + EmailFace.Down;
+                await email.SendEmailAsync(Input.Email, "Благодарим за регистрацию на сайте ttua.com.ua", client);
+                await email.SendEmailAsync("sergeshelipov@gmail.com", "Новый клиент с полными данными на сайте ttua.com.ua", Shelipov);
+                foreach (var i in _context.Managers)
+                {
+                    await email.SendEmailAsync(i.Email, "Новый клиент на сайте ttua.com.ua", admin);
+                }
         }
     }
 }
