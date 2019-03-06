@@ -50,12 +50,18 @@
                 <textarea  name="comment" id="comment" style="width:100%" rows="10" placeholder="Не более 200 символов" maxlength="200"></textarea>
             </p>
             <p>
-                <input type="submit" value="Заказать" />
+                <input type="submit" data-toggle="modal" data-target=".bs-example-modal-sm" value="Заказать" />
             </p>
         </form>
     </div>
 </div>
-
+<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            Заказ отправлен!
+        </div>
+    </div>
+</div>
 <div>
     <a asp-controller="Home" asp-action="Index">На Главную</a>
 </div>
