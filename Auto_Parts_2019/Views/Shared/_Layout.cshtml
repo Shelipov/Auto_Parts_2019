@@ -7,7 +7,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] -Zimmermann from Ukrane</title>
+    <title>@ViewData["Title"] Zimmermann from Ukrane</title>
     <link rel="shortcut icon" href="~/images/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
     <environment include="Development">
@@ -33,7 +33,6 @@
                     <span class="icon-bar"></span>
                 </button>
                 <img src="~/images/Zimmermann.png" style="margin-top:5px" alt="Zimmermann from Ukrane">
-                @*<a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">Zimmermann from Ukrane</a>*@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
@@ -102,10 +101,21 @@
             }
         })();
     </script>
+    
     <script type="text/javascript">
+        var elem = document.getElementById('count');
+        elem.onchange = function (e) {
+            var value = parseInt(e.target.value);
+            if (!value || value >= 10) {
+                e.target.value = '10';
+            }
+            if (!value || value <= 0) {
+                e.target.value = '1';
+            }
+        }
         function postCnt() {
             var _id = parseInt($(this).data('id')),
-                _cnt = parseInt($(this).val());
+                _cnt = elem.value;
             $.post(
                 '/editbasket',
                 { PartID: _id, Quantity: _cnt },
@@ -115,7 +125,6 @@
                 'json'
             );
         }
-
         $('.cnt').change(postCnt).keyup(postCnt);
     </script>
     <script>
@@ -133,7 +142,6 @@
             var el = document.getElementById("span");
             el.innerText = count;
         }
-
     </script>
 </body>
 
