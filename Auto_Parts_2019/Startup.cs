@@ -70,7 +70,7 @@ namespace Auto_Parts_2019
                 opts.User.AllowedUserNameCharacters =  "abcdefghijklmnopqrstuvwxyz QWERTYUIOPASDFGHJKLZXCVBNM йцукенгшщзхфывапролджэячсмитьбю ЙЦУКЕНГШЩЗХФЫВАПРОЛДЖЭЯЧСМИТЬБЮ";
             })
                 .AddEntityFrameworkStores<ApplicationDbContext>();
-
+            services.AddIdentity<Address, IdentityUser>();//.AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddMvc();//.SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
