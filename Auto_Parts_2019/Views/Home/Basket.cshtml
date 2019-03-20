@@ -28,7 +28,7 @@
                     @Html.DisplayFor(modelItem => item.Price) грн.
                 </td>                
                 <td>
-                    <input type="number" id="count" step="1" min="1" max="10" data-id="@item.ID" class="cnt" value="@Html.DisplayFor(modelItem => item.Quantity)"/> шт.
+                    <input type="number" step="1" min="1" max="4" data-id="@item.ID" class="cnt" value="@Html.DisplayFor(modelItem => item.Quantity)"/> шт.
                 </td>
                 <td>
                     <h4><a asp-action="DeleteBasket" asp-route-PartID="@item.ID" class="fas fa-trash-alt"></a></h4>
@@ -58,7 +58,7 @@
 <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
     <div class="modal-dialog modal-sm" role="document">
         <div class="modal-content">
-            <h3><strong>Заказ отправлен!</strong></h3>
+            Заказ отправлен!
         </div>
     </div>
 </div>

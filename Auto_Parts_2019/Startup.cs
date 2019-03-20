@@ -70,17 +70,8 @@ namespace Auto_Parts_2019
                 opts.User.AllowedUserNameCharacters =  "abcdefghijklmnopqrstuvwxyz QWERTYUIOPASDFGHJKLZXCVBNM йцукенгшщзхфывапролджэячсмитьбю ЙЦУКЕНГШЩЗХФЫВАПРОЛДЖЭЯЧСМИТЬБЮ";
             })
                 .AddEntityFrameworkStores<ApplicationDbContext>();
-            //services.AddAuthentication().AddFacebook(facebookOptions =>
-            //{
-            //    facebookOptions.AppId = Configuration.GetConnectionString("FacebokID");
-            //    facebookOptions.AppSecret = Configuration.GetConnectionString("Facebok"); ;
-            //});
-            services.AddAuthentication().AddGoogle(googleOptions =>
-            {
-                googleOptions.ClientId = Configuration.GetConnectionString("GoogleID");
-                googleOptions.ClientSecret = Configuration.GetConnectionString("Google");
-            });
-            
+
+
             services.AddMvc();//.SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 

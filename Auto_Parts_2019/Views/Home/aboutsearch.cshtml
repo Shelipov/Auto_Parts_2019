@@ -24,61 +24,46 @@
         {
             @foreach (var item in Model)
             {
-        <tr>
-            <td>
-                <strong>@Html.DisplayFor(modelItem => item.Number)</strong>
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price) грн.
-            </td>
-            @if (item.Quantity == 0)
-            {
-                <td>
-                    <font color="red">ожидается.</font>
-                </td>
-            }
-            @if (item.Quantity == 777)
-            {
-                <td>
-                    <font color="gren">больше</font> 4 шт.
-                </td>
-            }
-            @if (item.Quantity != 777 && item.Quantity>0)
-            {
-                <td>
-                    @Html.DisplayFor(modelItem => item.Quantity) шт.
-                </td>
-            }
-            <td>
-                @if (item.Foto_link != null)
-                {
+                <tr>
+                    <td>
+                        <strong>@Html.DisplayFor(modelItem => item.Number)</strong>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Price) грн.
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Quantity) шт.
+                    </td>
+                    <td>
+                        @if (item.Foto_link != null)
+                        {
 
-                <td>
-                    <a rel="simplebox" href="~/images/Foto_Zimmermann/Foto_Zimmermann/@item.Foto_link.Replace(@"\", @"/").Replace(@"~/images/Foto_Zimmermann/Foto_Zimmermann/", "").ToString()">
-                        <img src="~/images/Foto_Zimmermann/Foto_Zimmermann/@item.Foto_link.Replace(@"\", @"/").Replace(@"~/images/Foto_Zimmermann/Foto_Zimmermann/", "").ToString()" class="img-responsive" width="150" height="150" />
-                    </a>
+                        <td>
+                            <a rel="simplebox" href="~/images/Foto_Zimmermann/Foto_Zimmermann/@item.Foto_link.Replace(@"\", @"/").Replace(@"~/images/Foto_Zimmermann/Foto_Zimmermann/", "").ToString()">
+                                <img src="~/images/Foto_Zimmermann/Foto_Zimmermann/@item.Foto_link.Replace(@"\", @"/").Replace(@"~/images/Foto_Zimmermann/Foto_Zimmermann/", "").ToString()" class="img-responsive" width="150" height="150" />
+                            </a>
 
-                </td>
-            }
-            else
-            {
-                <td>
-                    <a rel="simplebox" href="~/images/Foto_Zimmermann/Foto_Zimmermann/NoFoto.jpg">
-                        <img src="~/images/Foto_Zimmermann/Foto_Zimmermann/NoFoto.jpg" class="img-responsive" width="150" height="150" />
-                    </a>
+                        </td>
+                    }
+                    else
+                    {
+                        <td>
+                            <a rel="simplebox" href="~/images/Foto_Zimmermann/Foto_Zimmermann/NoFoto.jpg">
+                                <img src="~/images/Foto_Zimmermann/Foto_Zimmermann/NoFoto.jpg" class="img-responsive" width="150" height="150" />
+                            </a>
 
-                </td>
+                        </td>
 
-            }
+                    }
 
 
-                <td>
-                    <h3><a asp-action="addtocart" asp-route-PartID="@item.ID" class="fas fa-shopping-cart"></a></h3>
-                </td>
-            </tr>
+                        <td>
+                            <h3><a asp-action="addtocart" asp-route-PartID="@item.ID" class="fas fa-shopping-cart"></a></h3>
+                        </td>
+                    </tr>
                 }
         }
     </tbody>
