@@ -28,7 +28,7 @@
                     @Html.DisplayFor(modelItem => item.Price) грн.
                 </td>                
                 <td>
-                    <input type="number" id="count" step="1" min="1" max="10" data-id="@item.ID" class="cnt" value="@Html.DisplayFor(modelItem => item.Quantity)"/> шт.
+                    <input type="number" step="1" min="1" max="10" data-id="@item.ID" class="cnt" value="@Html.DisplayFor(modelItem => item.Quantity)"/> шт.
                 </td>
                 <td>
                     <h4><a asp-action="DeleteBasket" asp-route-PartID="@item.ID" class="fas fa-trash-alt"></a></h4>
