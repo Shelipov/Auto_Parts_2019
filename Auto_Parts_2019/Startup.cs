@@ -67,10 +67,14 @@ namespace Auto_Parts_2019
                 opts.Password.RequireLowercase = false; // требуются ли символы в нижнем регистре
                 opts.Password.RequireUppercase = false; // требуются ли символы в верхнем регистре
                 opts.Password.RequireDigit = false; // требуются ли цифры
-                opts.User.AllowedUserNameCharacters =  "abcdefghijklmnopqrstuvwxyz QWERTYUIOPASDFGHJKLZXCVBNM йцукенгшщзхфывапролджэячсмитьбю ЙЦУКЕНГШЩЗХФЫВАПРОЛДЖЭЯЧСМИТЬБЮ";
+                opts.User.AllowedUserNameCharacters =  "abcdefghijklmnopqrstuvwxyz QWERTYUIOPASDFGHJKLZXCVBNM йцукенгшщзхфывапролджэячсмитьбю ЙЦУКЕНГШЩЗХФЫВАПРОЛДЖЭЯЧСМИТЬБЮ .";
             })
                 .AddEntityFrameworkStores<ApplicationDbContext>();
-            services.AddIdentity<Address, IdentityUser>();//.AddEntityFrameworkStores<ApplicationDbContext>();
+            services.AddAuthentication().AddGoogle(googleOptions =>
+            {
+                googleOptions.ClientId = Configuration.GetConnectionString("GoogleID");
+                googleOptions.ClientSecret = Configuration.GetConnectionString("Google");
+            });
 
             services.AddMvc();//.SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }

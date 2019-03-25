@@ -65,7 +65,7 @@ namespace Auto_Parts_2019.Areas.Identity.Pages.Account
 
             
             [DefaultValue("Украина")]
-            [Display(Name = "Страна")]
+            [Display(Name = "Компания")]
             public string Country { get; set; }
 
             [Required]
@@ -112,13 +112,8 @@ namespace Auto_Parts_2019.Areas.Identity.Pages.Account
                     NormalizedEmail=user.NormalizedEmail,NormalizedUserName=user.NormalizedUserName,
                     AddressID = user.Id,Country=Input.Country,
                                         Sity=Input.Sity, Avenue=Input.Avenue,Index=Input.Index};
-                //_context.Add(user);
-                Send(adr, Input.Password);
-                _context.Add(adr);
-                _context.SaveChanges();
-                Debit debit = new Debit(); debit.AdressID = adr.AddressID;debit.UserID = user.Id; debit.debit = 0.0;
-                _context.Add(debit);
-                _context.SaveChanges();
+                
+                
                 
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
@@ -131,7 +126,12 @@ namespace Auto_Parts_2019.Areas.Identity.Pages.Account
                         pageHandler: null,
                         values: new { userId = user.Id, code = code },
                         protocol: Request.Scheme);
-
+                    Send(adr, Input.Password);
+                    _context.Add(adr);
+                    _context.SaveChanges();
+                    Debit debit = new Debit(); debit.AdressID = adr.AddressID; debit.UserID = adr.Id; debit.debit = 0.0;
+                    _context.Add(debit);
+                    _context.SaveChanges();
                     await _emailSender.SendEmailAsync(Input.Email, "Подтвердите адрес электронной почты",
                         $"Пожалуйста, подтвердите вашу резистрацию по  <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>ссылке</a>.");
 
@@ -142,6 +142,7 @@ namespace Auto_Parts_2019.Areas.Identity.Pages.Account
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
+                
             }
             
             

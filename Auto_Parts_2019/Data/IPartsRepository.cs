@@ -75,7 +75,7 @@ namespace Auto_Parts_2019.Data
                     foreach(var i in parts)
                     {
                         if (i.Quantity > 4)
-                            i.Quantity = 4;
+                            i.Quantity = 777;
                     }
                     return parts;
                 }
