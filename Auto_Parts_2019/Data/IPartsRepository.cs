@@ -34,7 +34,7 @@ namespace Auto_Parts_2019.Data
         {
             using (IDbConnection db = new SqlConnection(connectionString))
             {
-                return db.Query<string>($"SELECT c.Number FROM [shelipov].[Parts] c Where c.Number LIKE '%{number}%'");
+                return db.Query<string>("SELECT c.Number FROM [shelipov].[Parts] c Where c.Number LIKE Concat('%',@number,'%')", new { number });
             }
         }
         public IEnumerable<Part> GetParts()
