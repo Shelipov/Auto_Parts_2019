@@ -161,6 +161,18 @@ namespace Auto_Parts_2019.Controllers
             }
             
         }
+        [HttpGet("AutocompleteSearch")]
+        public IActionResult AutocompleteSearch(string number)
+        {
+            try
+            {
+                return Json(repo.AutocompleteSearch(number));
+            }
+            catch(Exception ex)
+            {
+               return Json(ex.Message.ToString());  
+            }
+        }
 
         [HttpPost("aboutsearch")]
         public IActionResult AboutSearch(string number)

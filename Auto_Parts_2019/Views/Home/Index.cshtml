@@ -149,7 +149,7 @@
 
         <div>
             <form id="number" class="text-left" action="/search" method="post" name="number" style="position: relative; margin-bottom: 10px;margin: 30px">
-                <input id="number" style="width: 100%;outline: none; padding: 10px 50px 10px 12px; font-size: 16px; border: 2px solid #6699cc; border-radius: 25px; background-color: #f8f8f8;" name="number" type="text" value="" placeholder="Поиск по номеру">
+                <input  id="number" style="width: 100%;outline: none; padding: 10px 50px 10px 12px; font-size: 16px; border: 2px solid #6699cc; border-radius: 25px; background-color: #f8f8f8;" name="number" type="text" value="" data-autocomplete-sourse='@Url.Action("AutocompleteSearch","Home")'placeholder="Поиск по номеру"/>
                 <button style="position: absolute;outline: none; top: 5px; right:5px; padding: 5px; border: 2px solid #6699cc; border-radius: 20px; font-size: 16px; color: #fff; cursor: pointer; background: #6699cc;" title="Поиск" type="submit">Поиск</button>
             </form>
         </div>

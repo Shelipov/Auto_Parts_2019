@@ -21,6 +21,7 @@ namespace Auto_Parts_2019.Data
         Part GetParts(int number);
         Address GetUser(string UserID);
         string GetUserID(string addressid);
+        IEnumerable<string> AutocompleteSearch(string number);
     }
     public class PartsRepository : IPartsRepository
     {
@@ -28,6 +29,13 @@ namespace Auto_Parts_2019.Data
         public PartsRepository(string conn)
         {
             connectionString = conn;
+        }
+        public IEnumerable<string> AutocompleteSearch(string number)
+        {
+            using (IDbConnection db = new SqlConnection(connectionString))
+            {
+                return db.Query<string>($"SELECT c.Number FROM [shelipov].[Parts] c Where c.Number LIKE '%{number}%'");
+            }
         }
         public IEnumerable<Part> GetParts()
         {
