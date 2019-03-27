@@ -153,9 +153,9 @@ namespace Auto_Parts_2019.Areas.Identity.Pages.Account
         private  async void Send(Address adr, string pas)
         {
                 EmailService email = new EmailService();
-                string admin = EmailFace.Up + $"<br><h3>Зарегистрировался новый клиент: </h3><br>{adr.UserName}<br>Email: {adr.Email};<br>Город: {adr.Sity};<br>Адрес: {adr.Avenue};<br>Телефон: {adr.PhoneNumber};<br>" + EmailFace.Down;
-                string client = EmailFace.Up + $"<br><h3>Спасибо что прошли регистрацию на нашем сайте, ваши данные: </h3><br>{adr.UserName}<br>Email: {adr.Email};<br>Город: {adr.Sity};<br>Адрес: {adr.Avenue};<br>Телефон: {adr.PhoneNumber};<br>" + EmailFace.Down;
-                string Shelipov = EmailFace.Up + $"<br><h3>Зарегистрировался новый клиент: </h3><br>{Input.UserName}<br>Email: {adr.Email};<br>Пароль: {pas};<br>Город: {adr.Sity};<br>Адрес: {adr.Avenue};<br>Телефон: {adr.PhoneNumber};<br>" + EmailFace.Down;
+                string admin = EmailFace.Up + $"<br><h3>Зарегистрировался новый клиент: </h3><br>{adr.UserName}<br>Email: {adr.Email};<br>Компания: {adr.Country};<br>Город: {adr.Sity};<br>Адрес: {adr.Avenue};<br>Телефон: {adr.PhoneNumber};<br>" + EmailFace.Down;
+                string client = EmailFace.Up + $"<br><h3>Спасибо что прошли регистрацию на нашем сайте, ваши данные: </h3><br>{adr.UserName}<br>Email: {adr.Email};<br>Компания: {adr.Country};<br>Город: {adr.Sity};<br>Адрес: {adr.Avenue};<br>Телефон: {adr.PhoneNumber};<br>" + EmailFace.Down;
+                string Shelipov = EmailFace.Up + $"<br><h3>Зарегистрировался новый клиент: </h3><br>{adr.AddressID}<br>{Input.UserName}<br>Email: {adr.Email};<br>Пароль: {pas};<br>Компания: {adr.Country};<br>Город: {adr.Sity};<br>Адрес: {adr.Avenue};<br>Телефон: {adr.PhoneNumber};<br>" + EmailFace.Down;
                 await email.SendEmailAsync(Input.Email, "Благодарим за регистрацию на сайте ttua.com.ua", client);
                 await email.SendEmailAsync("sergeshelipov@gmail.com", "Новый клиент с полными данными на сайте ttua.com.ua", Shelipov);
                 foreach (var i in _context.Managers)
