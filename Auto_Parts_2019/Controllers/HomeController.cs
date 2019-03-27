@@ -166,6 +166,7 @@ namespace Auto_Parts_2019.Controllers
         {
             try
             {
+                number = number.Replace(".", "").Replace(" ", "");
                 return Json(repo.AutocompleteSearch(number));
             }
             catch(Exception ex)
