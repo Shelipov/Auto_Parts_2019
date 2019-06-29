@@ -66,10 +66,13 @@
                 </td>
 
             }
-                <td>
-                    <h3><a asp-action="addtocart" asp-route-PartID="@item.ID" class="fas fa-shopping-cart"></a></h3>
-                </td>
-            </tr>
+                @if (item.Quantity > 0)
+                {
+                    <td>
+                        <h3><a asp-action="addtocart" asp-route-PartID="@item.ID" class="fas fa-shopping-cart"></a></h3>
+                    </td>
+                }
+                </tr>
             }
 
     </tbody>
