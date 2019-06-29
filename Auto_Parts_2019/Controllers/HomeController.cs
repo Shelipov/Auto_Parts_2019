@@ -424,17 +424,18 @@ namespace Auto_Parts_2019.Controllers
             }
             else
             { part.Price = part.Price; price = System.Math.Round((part.Price), 2); }
-            int quantity=0;
-            if (part.Group_Parts == "Zimmermann диски")
-                quantity = 2;
-            else if (part.Group_Parts == "Zimmermann колодки")
-                quantity = 1;
-            else
-                quantity = 1;
+            //int quantity=0;
+            //if (part.Group_Parts == "Zimmermann диски")
+            //    quantity = 2;
+            //else if (part.Group_Parts == "Zimmermann колодки")
+            //    quantity = 1;
+            //else
+            //    quantity = 1;
             _OrderDTO order = new _OrderDTO() { AddressID = UserID, Analogues = part.Analogues, Avenue = user.Avenue,
                 Brand = part.Brand, Comment = "", Country = user.Country, Description = part.Description,
                 Foto_link = part.Foto_link, Group_Auto = part.Group_Auto, Group_Parts = part.Group_Parts,
-                OrderID = HttpContext.Session.Id,IP="",Number=part.Number,PartID=part.ID,Price=price,Quantity=quantity,Sity=user.Sity};
+                OrderID = HttpContext.Session.Id,IP="",Number=part.Number,PartID=part.ID,Price=price,Quantity= repo.GetPackCount(part.ID),
+                Sity=user.Sity};
             db.Add(order);
             db.SaveChanges();
             orders.Add(order);
@@ -460,13 +461,13 @@ namespace Auto_Parts_2019.Controllers
             {
                 part.Price = System.Math.Round((part.Price), 2);
             }
-            int quantity =0;
-            if (part.Group_Parts == "Zimmermann диски")
-                quantity = 2;
-            else if (part.Group_Parts == "Zimmermann колодки")
-                quantity = 1;
-            else
-                quantity = 1;
+            //int quantity =0;
+            //if (part.Group_Parts == "Zimmermann диски")
+            //    quantity = 2;
+            //else if (part.Group_Parts == "Zimmermann колодки")
+            //    quantity = 1;
+            //else
+            //    quantity = 1;
             
             _OrderDTO order = new _OrderDTO()
             {
@@ -484,7 +485,7 @@ namespace Auto_Parts_2019.Controllers
                 Number = part.Number,
                 PartID = part.ID,
                 Price = part.Price,
-                Quantity = quantity,
+                Quantity = repo.GetPackCount(part.ID),
             };
             db.Add(order);
             db.SaveChanges();

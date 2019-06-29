@@ -22,6 +22,7 @@ namespace Auto_Parts_2019.Data
         Address GetUser(string UserID);
         string GetUserID(string addressid);
         IEnumerable<string> AutocompleteSearch(string number);
+        int GetPackCount(int PartID);
     }
     public class PartsRepository : IPartsRepository
     {
@@ -146,6 +147,15 @@ namespace Auto_Parts_2019.Data
             {
                 var sqlQuery = @"SELECT Id From AspNetUsers Where AddressID = @addressid ";
                 var result = db.Query<string>(sqlQuery, new { addressid }).FirstOrDefault();
+                return result;
+            }
+        }
+        public int GetPackCount(int PartID)
+        {
+            using (IDbConnection db = new SqlConnection(connectionString))
+            {
+                var sqlQuery = @"SELECT Packaging From Packaging Where PartID = @PartID ";
+                var result = db.Query<int>(sqlQuery, new { PartID }).FirstOrDefault();
                 return result;
             }
         }
