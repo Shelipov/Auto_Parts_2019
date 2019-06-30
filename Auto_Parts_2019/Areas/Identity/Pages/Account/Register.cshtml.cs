@@ -24,20 +24,20 @@ namespace Auto_Parts_2019.Areas.Identity.Pages.Account
         private readonly UserManager<IdentityUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
-        //private readonly Address _address;
+        private readonly IPartsRepository repo;
         private readonly ApplicationDbContext _context;
 
         public RegisterModel(
             UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender,  ApplicationDbContext context)
+            IEmailSender emailSender,  ApplicationDbContext context, IPartsRepository _repo)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
-            
+            repo = _repo;
             _context = context;
         }
 
@@ -130,6 +130,7 @@ namespace Auto_Parts_2019.Areas.Identity.Pages.Account
                     _context.Add(adr);
                     _context.SaveChanges();
                     Debit debit = new Debit(); debit.AdressID = adr.AddressID; debit.UserID = adr.Id; debit.debit = 0.0;
+                    repo.CreateDebit_BN(debit);
                     _context.Add(debit);
                     _context.SaveChanges();
                     await _emailSender.SendEmailAsync(Input.Email, "Подтвердите адрес электронной почты",

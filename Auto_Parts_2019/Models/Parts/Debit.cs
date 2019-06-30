@@ -12,5 +12,6 @@ namespace Auto_Parts_2019.Models.Parts
         public string AdressID { get; set; }
         public string UserID { get; set; }
         public double debit { get; set; }
+        
     }
 }

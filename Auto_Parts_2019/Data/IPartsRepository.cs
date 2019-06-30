@@ -23,6 +23,7 @@ namespace Auto_Parts_2019.Data
         string GetUserID(string addressid);
         IEnumerable<string> AutocompleteSearch(string number);
         int GetPackCount(int PartID);
+        void CreateDebit_BN(Debit debit);
     }
     public class PartsRepository : IPartsRepository
     {
@@ -123,6 +124,22 @@ namespace Auto_Parts_2019.Data
 
             }
         }
+        public  void CreateDebit_BN(Debit Part)
+        {
+            using (IDbConnection db = new SqlConnection(connectionString))
+            {
+                var sqlQuery = @"INSERT INTO _Orders (AdressID,UserID) 
+                                 VALUES( 
+                                 @AdressID, @UserID)";
+                db.Execute(sqlQuery, new
+                {
+                    @UserID = Part.UserID,
+                    @AddressID = Part.AdressID
+                });
+
+            }
+        }
+
 
         public void Update(Part Part)
         {
