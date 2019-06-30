@@ -57,4 +57,10 @@
     <Folder Include="Areas\Identity\Services\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="Areas\Identity\Pages\Account\Manage\MutualSettlements.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+  </ItemGroup>
+
 </Project>
