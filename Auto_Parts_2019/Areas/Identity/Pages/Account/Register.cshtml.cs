@@ -133,9 +133,11 @@ namespace Auto_Parts_2019.Areas.Identity.Pages.Account
                     repo.CreateDebit_BN(debit);
                     _context.Add(debit);
                     _context.SaveChanges();
-                    await _emailSender.SendEmailAsync(Input.Email, "Подтвердите адрес электронной почты",
-                        $"Пожалуйста, подтвердите вашу резистрацию по  <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>ссылке</a>.");
-
+                    //await _emailSender.SendEmailAsync(Input.Email, "Подтвердите адрес электронной почты",
+                    //    $"Пожалуйста, подтвердите вашу резистрацию по  <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>ссылке</a>.");
+                    EmailService email = new EmailService();
+                    await email.SendEmailAsync(Input.Email, "Подтвердите адрес электронной почты",
+                        EmailFace.Up + $"Пожалуйста, подтвердите вашу резистрацию по  <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>ссылке</a>." + EmailFace.Down);
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     return LocalRedirect(returnUrl);
                 }

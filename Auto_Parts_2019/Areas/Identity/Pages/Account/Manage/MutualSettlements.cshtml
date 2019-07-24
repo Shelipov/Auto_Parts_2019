@@ -6,7 +6,34 @@
 }
 
 <h4>@ViewData["Title"]</h4>
+@foreach (var item in Model.ModelList)
+{
+<tr>
 
+    <td>
+        <strong>@Html.DisplayFor(modelItem => item.InvoiceType)</strong>
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.InvoceNumber)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.EU) euro.
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.UA) грн.
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Course)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.LastСhange)
+    </td>
+    @*<td>
+        <h3><a asp-action="addtocart" asp-route-PartID="@item.UserID" class="fas fa-shopping-cart"></a></h3>
+
+    </td>*@
+</tr>
+}
 <div class="row">
     <div class="col-md-6">
         <h1>Здесь будут взаиморасчеты</h1>

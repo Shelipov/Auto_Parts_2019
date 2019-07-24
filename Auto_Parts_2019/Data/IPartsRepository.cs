@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
 using System.Data.SqlClient;
+using Auto_Parts_2019.Areas.Identity.Pages.Account.Manage;
 
 namespace Auto_Parts_2019.Data
 {
@@ -24,6 +25,7 @@ namespace Auto_Parts_2019.Data
         IEnumerable<string> AutocompleteSearch(string number);
         int GetPackCount(int PartID);
         void CreateDebit_BN(Debit debit);
+        List<MutualSettlementModel> GetMutualSettlemenList(string UserID);
     }
     public class PartsRepository : IPartsRepository
     {
@@ -82,7 +84,7 @@ namespace Auto_Parts_2019.Data
 
                 if (parts != null)
                 {
-                    foreach(var i in parts)
+                    foreach (var i in parts)
                     {
                         if (i.Quantity > 4)
                             i.Quantity = 777;
@@ -90,7 +92,20 @@ namespace Auto_Parts_2019.Data
                     return parts;
                 }
 
-                else return null;
+                else {
+                    number = number.Replace(" ", "").Replace(".", "");
+                    parts = db.Query<Part>("select * from [Parts] where [Number] = @number or [Number] like RIGHT('%',RIGHT(RTRIM(@number),2),'%') ", new { number });
+                    if (parts != null)
+                    {
+                        foreach (var i in parts)
+                        {
+                            if (i.Quantity > 4)
+                                i.Quantity = 777;
+                        }
+                        return parts;
+                    }
+                    else
+                    return null; }
             }
         }
         public Part GetParts(int number)
@@ -173,6 +188,15 @@ namespace Auto_Parts_2019.Data
             {
                 var sqlQuery = @"SELECT Packaging From Packaging Where PartID = @PartID ";
                 var result = db.Query<int>(sqlQuery, new { PartID }).FirstOrDefault();
+                return result;
+            }
+        }
+        public List<MutualSettlementModel> GetMutualSettlemenList(string UserID)
+        {
+            using (IDbConnection db = new SqlConnection(connectionString))
+            {
+                var sqlQuery = @"SELECT * FROM MutualSettlement Where UserID = @UserID ";
+                var result = db.Query<MutualSettlementModel>(sqlQuery, new { UserID }).ToList();
                 return result;
             }
         }
