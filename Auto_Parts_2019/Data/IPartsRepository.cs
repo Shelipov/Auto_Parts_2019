@@ -77,6 +77,12 @@ namespace Auto_Parts_2019.Data
             using (IDbConnection db = new SqlConnection(connectionString))
             {
                 var numbers= db.Query<Cros>("select [Number] from [Cross] where [SearchNumber]=@number or [Number]=@number", new { number }).FirstOrDefault();
+                if(numbers==null)
+                {
+                    number = number.Replace(" ", "").Replace(".", "");
+                    var res  = db.Query<Part>("select * from [Parts] where [Number] = @number or [Number] like CONCAT(LEFT(RTRIM(@number),7),'%') ", new { number });
+                    return res;
+                }
                 string num = numbers.Number.ToString();
                 var analog = db.Query<Part>("select [Analogues] from [Parts] where [Number]= @num", new { num }).FirstOrDefault();
                 string an = analog.Analogues.ToString();
@@ -93,18 +99,7 @@ namespace Auto_Parts_2019.Data
                 }
 
                 else {
-                    number = number.Replace(" ", "").Replace(".", "");
-                    parts = db.Query<Part>("select * from [Parts] where [Number] = @number or [Number] like RIGHT('%',RIGHT(RTRIM(@number),2),'%') ", new { number });
-                    if (parts != null)
-                    {
-                        foreach (var i in parts)
-                        {
-                            if (i.Quantity > 4)
-                                i.Quantity = 777;
-                        }
-                        return parts;
-                    }
-                    else
+                    
                     return null; }
             }
         }
