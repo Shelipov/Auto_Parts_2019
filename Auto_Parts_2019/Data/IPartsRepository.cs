@@ -76,17 +76,15 @@ namespace Auto_Parts_2019.Data
         {
             using (IDbConnection db = new SqlConnection(connectionString))
             {
-                var numbers= db.Query<Cros>("select [Number] from [Cross] where [SearchNumber]=@number or [Number]=@number", new { number }).FirstOrDefault();
-                if(numbers==null)
-                {
-                    number = number.Replace(" ", "").Replace(".", "");
-                    var res  = db.Query<Part>("select * from [Parts] where [Number] = @number or [Number] like CONCAT(LEFT(RTRIM(@number),7),'%') ", new { number });
-                    return res;
-                }
-                string num = numbers.Number.ToString();
-                var analog = db.Query<Part>("select [Analogues] from [Parts] where [Number]= @num", new { num }).FirstOrDefault();
-                string an = analog.Analogues.ToString();
-                var parts = db.Query<Part>("select * from [Parts] where [Analogues] = @an AND Brand != 'Fremax' ", new { an }); //AND Quantity > 0
+                
+                var parts = db.Query<Part>(@"Declare @number nvarchar(max);
+                                            Set @number=(select distinct p.Analogues
+                                            from Parts as p
+                                            left join [shelipov].[Cross] as c on c.Number=p.Number
+                                            where c.SearchNumber = @an or p.Number = @an)
+                                            Select *
+                                            From Parts as p
+                                            Where p.Analogues = @number and p.Brand != 'Fremax'", new { an }); //AND Quantity > 0
 
                 if (parts != null)
                 {
