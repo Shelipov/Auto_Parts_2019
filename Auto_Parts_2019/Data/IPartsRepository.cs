@@ -25,7 +25,7 @@ namespace Auto_Parts_2019.Data
         IEnumerable<string> AutocompleteSearch(string number);
         int GetPackCount(int PartID);
         void CreateDebit_BN(Debit debit);
-        List<MutualSettlementModel> GetMutualSettlemenList(string UserID);
+        List<MutualSettlementModelDTO> GetMutualSettlemenList(string UserID);
     }
     public class PartsRepository : IPartsRepository
     {
@@ -77,14 +77,14 @@ namespace Auto_Parts_2019.Data
             using (IDbConnection db = new SqlConnection(connectionString))
             {
                 
-                var parts = db.Query<Part>(@"Declare @number nvarchar(max);
-                                            Set @number=(select distinct p.Analogues
+                var parts = db.Query<Part>(@"Declare @num nvarchar(max);
+                                            Set @num=(select distinct p.Analogues
                                             from Parts as p
                                             left join [shelipov].[Cross] as c on c.Number=p.Number
-                                            where c.SearchNumber = @an or p.Number = @an)
+                                            where c.SearchNumber = @number or p.Number = @number)
                                             Select *
                                             From Parts as p
-                                            Where p.Analogues = @number and p.Brand != 'Fremax'", new { an }); //AND Quantity > 0
+                                            Where p.Analogues = @num and p.Brand != 'Fremax'", new { number }); //AND Quantity > 0
 
                 if (parts != null)
                 {
@@ -184,13 +184,37 @@ namespace Auto_Parts_2019.Data
                 return result;
             }
         }
-        public List<MutualSettlementModel> GetMutualSettlemenList(string UserID)
+        public List<MutualSettlementModelDTO> GetMutualSettlemenList(string UserID)
         {
             using (IDbConnection db = new SqlConnection(connectionString))
             {
-                var sqlQuery = @"SELECT * FROM MutualSettlement Where UserID = @UserID ";
-                var result = db.Query<MutualSettlementModel>(sqlQuery, new { UserID }).ToList();
-                return result;
+                try
+                {
+                    var sqlQuery = @"SELECT m.MutualSettlementID
+                                      ,m.UserID
+                                      ,m.InvoiceType
+                                      ,m.InvoceNumber
+                                      ,m.EU
+                                      ,m.UA
+                                      ,(select c.CourseEuro from Courses as c) as Course
+                                      ,m.LastСhange
+                                      ,m.Del
+	                                  ,d.debit as Debit
+	                                  ,b.Debit_BN as DebitBN
+                                  FROM MutualSettlement as m
+                                  Left join Debits as d on d.UserID=m.UserID
+                                  left join Debit_BN as b on b.UserID=m.UserID
+                                  Where m.UserID=@UserID";
+                    var result = db.Query<MutualSettlementModelDTO>(sqlQuery, new { UserID }).ToList();
+                    if (result != null)
+                        return result;
+                    else
+                        return new List<MutualSettlementModelDTO>();
+                }
+                catch(Exception ex)
+                {
+                    return new List<MutualSettlementModelDTO>();
+                }
             }
         }
     }
