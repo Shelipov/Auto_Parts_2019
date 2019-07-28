@@ -1,4 +1,5 @@
-﻿using Auto_Parts_2019.Models.Parts;
+﻿using Auto_Parts_2019.Areas.Identity.Pages.Account.Manage;
+using Auto_Parts_2019.Models.Parts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,5 +11,6 @@ namespace Auto_Parts_2019.Helpers
     {
         public IEnumerable<Part> Parts { get; set; }
         public PageViewModel PageViewModel { get; set; }
+        public List<MutualSettlementModelDTO> ModelList { get; internal set; }
     }
 }

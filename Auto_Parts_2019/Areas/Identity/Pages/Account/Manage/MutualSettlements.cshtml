@@ -1,44 +1,105 @@
 ﻿@page
 @model MutualSettlementModel
 @{
-    ViewData["Title"] = "Взаиморасчеты";
+    ViewData["Title"] = "Взаиморасчеты :";
     ViewData["ActivePage"] = ManageNavPages.MutualSettlements;
 }
-
+@using Auto_Parts_2019.Helpers
 <h4>@ViewData["Title"]</h4>
-@foreach (var item in Model.ModelList)
+@if (Model.ModelList.Select(x => x.Debit).FirstOrDefault() > 0)
+{<strong>Ув. @Model.ModelList.Select(x => x.UserID).FirstOrDefault() ваша задолженность на @DateTime.Now составляет: @Model.ModelList.Select(x => x.Debit * x.Course).FirstOrDefault() грн. (@Model.ModelList.Select(x => x.Debit).FirstOrDefault() euro)</strong>}
+else if (Model.ModelList.Select(x => x.Debit).FirstOrDefault() < 0)
 {
-<tr>
-
-    <td>
-        <strong>@Html.DisplayFor(modelItem => item.InvoiceType)</strong>
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.InvoceNumber)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.EU) euro.
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.UA) грн.
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.Course)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.LastСhange)
-    </td>
-    @*<td>
-        <h3><a asp-action="addtocart" asp-route-PartID="@item.UserID" class="fas fa-shopping-cart"></a></h3>
-
-    </td>*@
-</tr>
+<strong>Ув. @Model.ModelList.Select(x => x.UserID).FirstOrDefault() на вашем счету : @Model.ModelList.Select(x => x.Debit * x.Course).FirstOrDefault() грн. (@Model.ModelList.Select(x => x.Debit).FirstOrDefault() euro)</strong>
 }
-<div class="row">
-    <div class="col-md-6">
-        <h1>Здесь будут взаиморасчеты</h1>
-    </div>
+<br />
+@if (Model.ModelList.Select(x => x.DebitBN).FirstOrDefault() > 0)
+{
+    <strong>Ув. @Model.ModelList.Select(x => x.UserID).FirstOrDefault() ваша задолженность(безнал) на @DateTime.Now составляет:@Model.ModelList.Select(x => x.DebitBN).FirstOrDefault() грн.</strong>
+}
+else if (Model.ModelList.Select(x => x.DebitBN).FirstOrDefault() < 0)
+{
+    <strong>Ув. @Model.ModelList.Select(x => x.UserID).FirstOrDefault() на вашем счету :@Model.ModelList.Select(x => x.DebitBN).FirstOrDefault() грн.</strong>
+}
+<br />
+<table class="table">
+    <thead>
+        <tr>
+            <td>
+                <strong>№ </strong>
+            </td>
+            <td>
+                <strong>Документ</strong>
+            </td>
+            <td>
+                <strong>Номер</strong>
+            </td>
+            <td>
+                <strong>Сумма euro.</strong>
+            </td>
+            <td>
+                <strong>Сумма грн.</strong>
+            </td>
+            <td>
+                <strong>Дата</strong>
+            </td>
+            <td>
+                <strong>Выслать на email</strong>
+            </td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.ModelList)
+        {
+            <tr>
+                <td>
+                    <strong>@Html.DisplayFor(modelItem => item.Count)</strong>
+                </td>
+                <td>
+                    <strong>@Html.DisplayFor(modelItem => item.InvoiceType)</strong>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.InvoceNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EU) euro.
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UA) грн.
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateCreate)
+                </td>
+                <td>
+                    @*<h3><a asp-action="addtocart" asp-route-PartID="@item.UserID" class="fas fa-shopping-cart"></a></h3>*@
+                    !!!
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<div>
+    
+    @if (Model.ModelList.Select(x => x.returnModel.PageViewModel.HasPreviousPage).FirstOrDefault())
+    {
+    <a asp-action="OnGet"
+       asp-route-page="@(Model.ModelList.Select(x=>x.returnModel.PageViewModel.PageNumber).FirstOrDefault() - 1)"
+       class="btn btn-default btn">
+        <i class="glyphicon glyphicon-chevron-left"></i>
+        Назад
+    </a>
+    }
+    @if (Model.ModelList.Select(x => x.returnModel.PageViewModel.HasNextPage).FirstOrDefault())
+    {
+    <a asp-action="OnGet"
+       asp-route-page="@(Model.ModelList.Select(x=>x.returnModel.PageViewModel.PageNumber).FirstOrDefault() + 1)"
+       class="btn btn-default btn">
+        Вперед
+        <i class="glyphicon glyphicon-chevron-right"></i>
+    </a>
+    }
 </div>
+
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

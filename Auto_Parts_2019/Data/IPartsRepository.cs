@@ -191,20 +191,22 @@ namespace Auto_Parts_2019.Data
                 try
                 {
                     var sqlQuery = @"SELECT m.MutualSettlementID
-                                      ,m.UserID
-                                      ,m.InvoiceType
-                                      ,m.InvoceNumber
-                                      ,m.EU
-                                      ,m.UA
-                                      ,(select c.CourseEuro from Courses as c) as Course
-                                      ,m.LastСhange
-                                      ,m.Del
-	                                  ,d.debit as Debit
-	                                  ,b.Debit_BN as DebitBN
-                                  FROM MutualSettlement as m
-                                  Left join Debits as d on d.UserID=m.UserID
-                                  left join Debit_BN as b on b.UserID=m.UserID
-                                  Where m.UserID=@UserID";
+                                          ,m.UserID
+                                          ,m.InvoiceType
+                                          ,m.InvoceNumber
+                                          ,m.EU
+                                          ,m.UA
+                                          ,(select c.CourseEuro from Courses as c) as Course
+                                          ,m.LastСhange
+                                          ,m.Del
+	                                      ,d.debit as Debit
+	                                      ,b.Debit_BN as DebitBN
+                                          ,m.DateCreate
+                                      from  Debits as d 
+                                      left join Debit_BN as b on b.UserID=d.UserID
+                                      left join MutualSettlement as m on m.UserID = d.UserID
+                                      Where d.AdressID =@UserID or d.UserID=@UserID
+                                      Order by d.DebitID DESC";
                     var result = db.Query<MutualSettlementModelDTO>(sqlQuery, new { UserID }).ToList();
                     if (result != null)
                         return result;
