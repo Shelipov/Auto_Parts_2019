@@ -26,6 +26,7 @@ namespace Auto_Parts_2019.Data
         int GetPackCount(int PartID);
         void CreateDebit_BN(Debit debit);
         List<MutualSettlementModelDTO> GetMutualSettlemenList(string UserID);
+        
     }
     public class PartsRepository : IPartsRepository
     {
@@ -192,6 +193,7 @@ namespace Auto_Parts_2019.Data
                 {
                     var sqlQuery = @"SELECT m.MutualSettlementID
                                           ,m.UserID
+										  ,u.UserName
                                           ,m.InvoiceType
                                           ,m.InvoceNumber
                                           ,m.EU
@@ -205,6 +207,7 @@ namespace Auto_Parts_2019.Data
                                       from  Debits as d 
                                       left join Debit_BN as b on b.UserID=d.UserID
                                       left join MutualSettlement as m on m.UserID = d.UserID
+									  left join AspNetUsers as u on u.AddressID = @UserID
                                       Where d.AdressID =@UserID or d.UserID=@UserID
                                       Order by d.DebitID DESC";
                     var result = db.Query<MutualSettlementModelDTO>(sqlQuery, new { UserID }).ToList();
@@ -219,5 +222,6 @@ namespace Auto_Parts_2019.Data
                 }
             }
         }
+        
     }
 }

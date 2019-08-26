@@ -7,19 +7,19 @@
 @using Auto_Parts_2019.Helpers
 <h4>@ViewData["Title"]</h4>
 @if (Model.ModelList.Select(x => x.Debit).FirstOrDefault() > 0)
-{<strong>Ув. @Model.ModelList.Select(x => x.UserID).FirstOrDefault() ваша задолженность на @DateTime.Now составляет: @Model.ModelList.Select(x => x.Debit * x.Course).FirstOrDefault() грн. (@Model.ModelList.Select(x => x.Debit).FirstOrDefault() euro)</strong>}
+{<strong>Ув. @Model.ModelList.Select(x => x.UserName).FirstOrDefault() ваша задолженность на @DateTime.Now составляет: @Model.ModelList.Select(x => x.Debit * x.Course).FirstOrDefault() грн. (@Model.ModelList.Select(x => x.Debit).FirstOrDefault() euro)</strong>}
 else if (Model.ModelList.Select(x => x.Debit).FirstOrDefault() < 0)
 {
-<strong>Ув. @Model.ModelList.Select(x => x.UserID).FirstOrDefault() на вашем счету : @Model.ModelList.Select(x => x.Debit * x.Course).FirstOrDefault() грн. (@Model.ModelList.Select(x => x.Debit).FirstOrDefault() euro)</strong>
+<strong>Ув. @Model.ModelList.Select(x => x.UserName).FirstOrDefault() на вашем счету : @Model.ModelList.Select(x => x.Debit * x.Course).FirstOrDefault() грн. (@Model.ModelList.Select(x => x.Debit).FirstOrDefault() euro)</strong>
 }
 <br />
 @if (Model.ModelList.Select(x => x.DebitBN).FirstOrDefault() > 0)
 {
-    <strong>Ув. @Model.ModelList.Select(x => x.UserID).FirstOrDefault() ваша задолженность(безнал) на @DateTime.Now составляет:@Model.ModelList.Select(x => x.DebitBN).FirstOrDefault() грн.</strong>
+    <strong>Ув. @Model.ModelList.Select(x => x.UserName).FirstOrDefault() ваша задолженность(безнал) на @DateTime.Now составляет:@Model.ModelList.Select(x => x.DebitBN).FirstOrDefault() грн.</strong>
 }
 else if (Model.ModelList.Select(x => x.DebitBN).FirstOrDefault() < 0)
 {
-    <strong>Ув. @Model.ModelList.Select(x => x.UserID).FirstOrDefault() на вашем счету :@Model.ModelList.Select(x => x.DebitBN).FirstOrDefault() грн.</strong>
+    <strong>Ув. @Model.ModelList.Select(x => x.UserName).FirstOrDefault() на вашем счету :@Model.ModelList.Select(x => x.DebitBN).FirstOrDefault() грн.</strong>
 }
 <br />
 <table class="table">
@@ -71,8 +71,7 @@ else if (Model.ModelList.Select(x => x.DebitBN).FirstOrDefault() < 0)
                     @Html.DisplayFor(modelItem => item.DateCreate)
                 </td>
                 <td>
-                    @*<h3><a asp-action="addtocart" asp-route-PartID="@item.UserID" class="fas fa-shopping-cart"></a></h3>*@
-                    !!!
+                    <h3><a asp-action="Email" asp-route-InvoceNumber="@item.InvoceNumber" class="glyphicon glyphicon-envelope"></a></h3>
                 </td>
             </tr>
         }

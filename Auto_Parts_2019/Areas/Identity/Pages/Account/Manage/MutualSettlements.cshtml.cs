@@ -65,6 +65,9 @@ namespace Auto_Parts_2019.Areas.Identity.Pages.Account.Manage
         public int MutualSettlementID { get; set; }
 
         public string UserID { get; set; }
+
+        public string UserName { get; set; }
+
         public int Count { get; set; }
 
         [Display(Name = "Накладная")]
@@ -95,6 +98,7 @@ namespace Auto_Parts_2019.Areas.Identity.Pages.Account.Manage
         public double DebitBN { get; set; }
 
         public bool Del { get; set; }
+
         public IndexViewModel returnModel { get; set; }
     }
 }
