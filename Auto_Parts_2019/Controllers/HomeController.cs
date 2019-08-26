@@ -17,6 +17,7 @@ using System.Security.Principal;
 using Auto_Parts_2019.Models.Parts.DTO;
 using Microsoft.AspNetCore.Http;
 
+
 namespace Auto_Parts_2019.Controllers
 {
     public class HomeController : Controller
@@ -102,6 +103,15 @@ namespace Auto_Parts_2019.Controllers
                 }
             }
             db.SaveChanges();
+        }
+
+        [Route("editemail")]
+        [HttpPost]
+        public async void EmailGetAsync(int _MutualSettlementID)
+        {
+            var user = await userManager.GetUserAsync(User);
+            var Email = repo.GetUserEmail(user.Id);
+            repo.EmailMutualSettlemenList(_MutualSettlementID, user.Id, Email);
         }
 
         [Route("deletebasket")]

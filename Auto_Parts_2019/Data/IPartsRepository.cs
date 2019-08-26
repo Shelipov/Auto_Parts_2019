@@ -26,7 +26,10 @@ namespace Auto_Parts_2019.Data
         int GetPackCount(int PartID);
         void CreateDebit_BN(Debit debit);
         List<MutualSettlementModelDTO> GetMutualSettlemenList(string UserID);
-        
+        void EmailMutualSettlemenList(int MutualSettlementID, string UserID, string Email);
+        string GetUserEmail(string UserID);
+
+
     }
     public class PartsRepository : IPartsRepository
     {
@@ -115,6 +118,14 @@ namespace Auto_Parts_2019.Data
             using (IDbConnection db = new SqlConnection(connectionString))
             {
                 return db.Query<Address>("Select a.Country,a.Sity,a.Avenue,a.Email,a.PhoneNumber,a.UserName,a.Discount FROM [AspNetUsers] a where [AddressID]=@UserID", new { UserID}).FirstOrDefault();
+            }
+        }
+        public string GetUserEmail(string UserID)
+        {
+
+            using (IDbConnection db = new SqlConnection(connectionString))
+            {
+                return db.Query<string>("Select a.Email FROM AspNetUsers a where AddressID=@UserID", new { UserID }).FirstOrDefault();
             }
         }
 
@@ -222,6 +233,19 @@ namespace Auto_Parts_2019.Data
                 }
             }
         }
-        
+        public void EmailMutualSettlemenList(int MutualSettlementID,string UserID,string Email)
+        {
+            using (IDbConnection db = new SqlConnection(connectionString))
+            {
+                var sqlQuery = @"Insert EmailMutualSettlement (MutualSettlementID,UserID,Email)
+                                 Values(@MutualSettlementID,@UserID,@Email)";
+                db.Execute(sqlQuery, new
+                {
+                    @MutualSettlementID=MutualSettlementID,
+                    @UserID=UserID,
+                    @Email=Email
+                });
+            }
+        }
     }
 }

@@ -20,6 +20,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Caching.Memory;
+using Auto_Parts_2019.Areas.Identity.Pages.Account.Manage;
 
 namespace Auto_Parts_2019
 {
