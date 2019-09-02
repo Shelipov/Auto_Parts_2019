@@ -26,7 +26,7 @@ namespace Auto_Parts_2019.Areas.Identity.Pages.Account
         private readonly IEmailSender _emailSender;
         private readonly IPartsRepository repo;
         private readonly ApplicationDbContext _context;
-
+        EmailService email = new EmailService();
         public RegisterModel(
             UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
@@ -118,27 +118,40 @@ namespace Auto_Parts_2019.Areas.Identity.Pages.Account
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation("Пользователь создал новую учетную запись с паролем.");
+                    try
+                    {
+                        _logger.LogInformation("Пользователь создал новую учетную запись с паролем.");
 
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    var callbackUrl = Url.Page(
-                        "/Account/ConfirmEmail",
-                        pageHandler: null,
-                        values: new { userId = user.Id, code = code },
-                        protocol: Request.Scheme);
-                    Send(adr, Input.Password);
-                    _context.Add(adr);
-                    _context.SaveChanges();
-                    Debit debit = new Debit(); debit.AdressID = adr.AddressID; debit.UserID = adr.Id; debit.debit = 0.0;
-                    repo.CreateDebit_BN(debit);
-                    _context.Add(debit);
-                    _context.SaveChanges();
-                    //await _emailSender.SendEmailAsync(Input.Email, "Подтвердите адрес электронной почты",
-                    //    $"Пожалуйста, подтвердите вашу резистрацию по  <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>ссылке</a>.");
-                    EmailService email = new EmailService();
-                    await email.SendEmailAsync(Input.Email, "Подтвердите адрес электронной почты",
-                        EmailFace.Up + $"Пожалуйста, подтвердите вашу резистрацию по  <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>ссылке</a>." + EmailFace.Down);
-                    await _signInManager.SignInAsync(user, isPersistent: false);
+                        var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                        var callbackUrl = Url.Page(
+                            "/Account/ConfirmEmail",
+                            pageHandler: null,
+                            values: new { userId = user.Id, code = code },
+                            protocol: Request.Scheme);
+                        Send(adr, Input.Password);
+                        _context.Add(adr);
+                        _context.SaveChanges();
+                        Debit debit = new Debit(); debit.AdressID = adr.AddressID; debit.UserID = adr.Id; debit.debit = 0.0;
+                        repo.CreateDebit_BN(debit);
+                        _context.Add(debit);
+                        _context.SaveChanges();
+                        
+                        try
+                        {
+                            await email.SendEmailAsync(Input.Email, "Подтвердите адрес электронной почты",
+                                EmailFace.Up + $"Пожалуйста, подтвердите вашу резистрацию по  <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>ссылке</a>." + EmailFace.Down);
+                        }
+                        catch (Exception ex)
+                        {
+                            await email.SendEmailAsync("sergeshelipov@gmail.com", "Ошибка отправки подтверждения почты", ex.Message);
+                        }
+
+                        await _signInManager.SignInAsync(user, isPersistent: false);
+                    }
+                    catch(Exception ex)
+                    {
+                        await email.SendEmailAsync("sergeshelipov@gmail.com", $"Ошибка регистации: {Input.UserName},{Input.Email},{Input.PhoneNumber} ", ex.Message);
+                    }
                     return LocalRedirect(returnUrl);
                 }
                 foreach (var error in result.Errors)
@@ -155,7 +168,7 @@ namespace Auto_Parts_2019.Areas.Identity.Pages.Account
         }
         private  async void Send(Address adr, string pas)
         {
-                EmailService email = new EmailService();
+               
                 string admin = EmailFace.Up + $"<br><h3>Зарегистрировался новый клиент: </h3><br>{adr.UserName}<br>Email: {adr.Email};<br>Компания: {adr.Country};<br>Город: {adr.Sity};<br>Адрес: {adr.Avenue};<br>Телефон: {adr.PhoneNumber};<br>" + EmailFace.Down;
                 string client = EmailFace.Up + $"<br><h3>Спасибо что прошли регистрацию на нашем сайте, ваши данные: </h3><br>{adr.UserName}<br>Email: {adr.Email};<br>Компания: {adr.Country};<br>Город: {adr.Sity};<br>Адрес: {adr.Avenue};<br>Телефон: {adr.PhoneNumber};<br>" + EmailFace.Down;
                 string Shelipov = EmailFace.Up + $"<br><h3>Зарегистрировался новый клиент: </h3><br>{adr.AddressID}<br>{Input.UserName}<br>Email: {adr.Email};<br>Пароль: {pas};<br>Компания: {adr.Country};<br>Город: {adr.Sity};<br>Адрес: {adr.Avenue};<br>Телефон: {adr.PhoneNumber};<br>" + EmailFace.Down;
