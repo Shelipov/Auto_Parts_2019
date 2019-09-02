@@ -121,7 +121,7 @@ namespace Auto_Parts_2019.Areas.Identity.Pages.Account
                     try
                     {
                         _logger.LogInformation("Пользователь создал новую учетную запись с паролем.");
-
+                        Debit debit = new Debit(); debit.AdressID = adr.AddressID; debit.UserID = adr.Id; debit.debit = 0.0;
                         var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                         var callbackUrl = Url.Page(
                             "/Account/ConfirmEmail",
@@ -131,11 +131,9 @@ namespace Auto_Parts_2019.Areas.Identity.Pages.Account
                         Send(adr, Input.Password);
                         _context.Add(adr);
                         _context.SaveChanges();
-                        Debit debit = new Debit(); debit.AdressID = adr.AddressID; debit.UserID = adr.Id; debit.debit = 0.0;
-                        repo.CreateDebit_BN(debit);
                         _context.Add(debit);
                         _context.SaveChanges();
-                        
+                        repo.CreateDebit_BN(debit);
                         try
                         {
                             await email.SendEmailAsync(Input.Email, "Подтвердите адрес электронной почты",

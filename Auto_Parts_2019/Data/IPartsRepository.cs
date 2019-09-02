@@ -154,7 +154,7 @@ namespace Auto_Parts_2019.Data
                 db.Execute(sqlQuery, new
                 {
                     @UserID = Part.UserID,
-                    @AddressID = Part.AdressID
+                    @AdressID = Part.AdressID
                 });
 
             }
