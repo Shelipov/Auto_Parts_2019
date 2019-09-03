@@ -241,10 +241,10 @@ namespace Auto_Parts_2019.Data
                 //                 Values(@MutualSettlementID,@UserID,@Email)";
                 var sqlQuery = @"declare @InvoiceType nvarchar(max);
                                 declare @InvoceNumber nvarchar(max);
-                                declare @UserID nvarchar(max);
+                                declare @User nvarchar(max);
                                 declare @Email nvarchar(max);
-                                Set @InvoiceType = (select m.InvoiceType from MutualSettlement as m where m.MutualSettlementID = 1);
-                                Set @InvoceNumber = (select m.InvoceNumber from MutualSettlement as m where m.MutualSettlementID = 1);
+                                Set @InvoiceType = (select m.InvoiceType from MutualSettlement as m where m.MutualSettlementID = @MutualSettlementID);
+                                Set @InvoceNumber = (select m.InvoceNumber from MutualSettlement as m where m.MutualSettlementID = @MutualSettlementID);
                                 Set @User = (select u.Id from AspNetUsers as u where u.AddressID = @UserID); 
                                 Set @Email = (select u.Email from AspNetUsers as u where u.AddressID = @UserID); 
                                 Insert EmailMutualSettlement (MutualSettlementID,UserID,Email,InvoiceType,InvoceNumber)
