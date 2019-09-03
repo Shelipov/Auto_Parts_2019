@@ -3,11 +3,8 @@
     $.post(
         '/editemail',
         { _MutualSettlementID: _id},
-        function (ans) {
-            console.log(ans);
-        },
         'json'
     );
 }
 
-$('#TT').click(postEmail); //.change(postEmail).keyup(postEmail);
+$('.glyphicon').click(postEmail); //.change(postEmail).keyup(postEmail);

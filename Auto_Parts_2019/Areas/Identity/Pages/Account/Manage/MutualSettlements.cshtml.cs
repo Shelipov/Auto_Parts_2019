@@ -73,7 +73,7 @@ namespace Auto_Parts_2019.Areas.Identity.Pages.Account.Manage
         [Display(Name = "Накладная")]
         public string InvoiceType { get; set; }
 
-        [Display(Name = "Номер Накладнщй")]
+        [Display(Name = "Номер Накладной")]
         public string InvoceNumber { get; set; }
 
         [Display(Name = "euro")]

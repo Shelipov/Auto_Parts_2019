@@ -71,20 +71,19 @@ else if (Model.ModelList.Select(x => x.DebitBN).FirstOrDefault() < 0)
                     @Html.DisplayFor(modelItem => item.DateCreate)
                 </td>
                 <td>
-                    @*<strong><a asp-action="EmailGetAsync" asp-route-InvoceNumber="@item.MutualSettlementID" class="glyphicon glyphicon-envelope"></a></strong>*@
-                    <strong><a id="TT" data-id="@item.MutualSettlementID" data-toggle="modal" data-target=".bs-example-modal-sm" class="glyphicon glyphicon-envelope"></a></strong>
-                    <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
-                        <div class="modal-dialog modal-sm" role="document">
-                            <div class="modal-content">
-                                <h3><strong>  Запрос отправлен! </strong></h3>
-                            </div>
-                        </div>
-                    </div>
+                   <strong><a data-id="@item.MutualSettlementID" data-toggle="modal" data-target=".bs-example-modal-sm" class="glyphicon glyphicon-envelope"></a></strong>
                 </td>
             </tr>
         }
     </tbody>
 </table>
+<div class="modal fade bs-example-modal-sm" tabindex="-1" style="text-align:center" role="dialog" aria-labelledby="mySmallModalLabel">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <h3><strong>  Запрос отправлен! </strong></h3>
+        </div>
+    </div>
+</div>
 <div>
     
     @if (Model.ModelList.Select(x => x.returnModel.PageViewModel.HasPreviousPage).FirstOrDefault())

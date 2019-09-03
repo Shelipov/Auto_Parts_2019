@@ -107,11 +107,9 @@ namespace Auto_Parts_2019.Controllers
 
         [Route("editemail")]
         [HttpPost]
-        public async void EmailGetAsync(int _MutualSettlementID)
+        public  void EmailGetAsync(int _MutualSettlementID)
         {
-            var user = await userManager.GetUserAsync(User);
-            var Email = repo.GetUserEmail(user.Id);
-            repo.EmailMutualSettlemenList(_MutualSettlementID, user.Id, Email);
+            repo.EmailMutualSettlemenList(_MutualSettlementID, userManager.GetUserId(User));
         }
 
         [Route("deletebasket")]

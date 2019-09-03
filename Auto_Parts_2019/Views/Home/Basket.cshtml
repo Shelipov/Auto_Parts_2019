@@ -14,6 +14,8 @@
         
         
     </head>
+@if (Model.Count() > 0)
+{
     <table class="table">
         <tbody>
             @foreach (var item in Model)
@@ -40,7 +42,7 @@
         </tbody>
     </table>
 
-    
+
 
 <div  class="row">
     <div class="outline: none">
@@ -56,7 +58,7 @@
         </form>
     </div>
 </div>
-<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+<div class="modal fade bs-example-modal-sm" tabindex="-1" style="text-align:center" role="dialog" aria-labelledby="mySmallModalLabel">
     <div class="modal-dialog modal-sm" role="document">
         <div class="modal-content">
             <h3><strong>  Заказ отправлен! </strong></h3>
@@ -66,4 +68,9 @@
 <div>
     <a asp-controller="Home" asp-action="Index">На Главную</a>
 </div>
+}
+else
+{
+ <h3>Корзина пуста!!!</h3>
+}
 
