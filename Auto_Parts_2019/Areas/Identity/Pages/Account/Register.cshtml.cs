@@ -122,27 +122,28 @@ namespace Auto_Parts_2019.Areas.Identity.Pages.Account
                     {
                         _logger.LogInformation("Пользователь создал новую учетную запись с паролем.");
                         Debit debit = new Debit(); debit.AdressID = adr.AddressID; debit.UserID = adr.Id; debit.debit = 0.0;
-                        var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                        var callbackUrl = Url.Page(
-                            "/Account/ConfirmEmail",
-                            pageHandler: null,
-                            values: new { userId = user.Id, code = code },
-                            protocol: Request.Scheme);
+                        //var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                        //var callbackUrl = Url.Page(
+                        //    "/Account/ConfirmEmail",
+                        //    pageHandler: null,
+                        //    values: new { userId = user.Id, code = code },
+                        //    protocol: Request.Scheme);
                         Send(adr, Input.Password);
                         _context.Add(adr);
                         _context.SaveChanges();
                         _context.Add(debit);
                         _context.SaveChanges();
                         repo.CreateDebit_BN(debit);
-                        try
-                        {
-                            await email.SendEmailAsync(Input.Email, "Подтвердите адрес электронной почты",
-                                EmailFace.Up + $"Пожалуйста, подтвердите вашу резистрацию по  <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>ссылке</a>." + EmailFace.Down);
-                        }
-                        catch (Exception ex)
-                        {
-                            await email.SendEmailAsync("sergeshelipov@gmail.com", "Ошибка отправки подтверждения почты", ex.Message);
-                        }
+                        //try
+                        //{
+                        //    await email.SendEmailAsync(Input.Email, "Подтвердите ваш адрес электронной почты",
+                        //    $"Пожалуйста, подтвердите свой аккаунт по <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>нажав здесь</a>.");
+
+                        //}
+                        //catch (Exception ex)
+                        //{
+                        //    await email.SendEmailAsync("sergeshelipov@gmail.com", "Ошибка отправки подтверждения почты", ex.Message);
+                        //}
 
                         await _signInManager.SignInAsync(user, isPersistent: false);
                     }

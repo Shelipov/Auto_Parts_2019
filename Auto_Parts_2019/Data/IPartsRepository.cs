@@ -28,7 +28,7 @@ namespace Auto_Parts_2019.Data
         List<MutualSettlementModelDTO> GetMutualSettlemenList(string UserID);
         void EmailMutualSettlemenList(int MutualSettlementID, string UserID);
         string GetUserEmail(string UserID);
-
+        void DellAddress(string userId);
 
     }
     public class PartsRepository : IPartsRepository
@@ -256,5 +256,17 @@ namespace Auto_Parts_2019.Data
                 });
             }
         }
+        public void DellAddress(string userId)
+        {
+            using (IDbConnection db = new SqlConnection(connectionString))
+            {
+                var sqlQuery = @"DELETE AspNetUsers Where AddressID = @userId";
+                db.Execute(sqlQuery, new
+                {
+                    @userId = userId
+                });
+            }
+        }
+
     }
 }

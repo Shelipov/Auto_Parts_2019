@@ -22,7 +22,7 @@ namespace Auto_Parts_2019.Areas.Identity.Pages.Account.Manage
 
         public static string TwoFactorAuthentication => "TwoFactorAuthentication";
 
-        public static string MutualSettlements => "MutualSettlements";
+        public static string MutualSettlement => "MutualSettlement";
 
         public static string IndexNavClass(ViewContext viewContext) => PageNavClass(viewContext, Index);
 
@@ -38,7 +38,7 @@ namespace Auto_Parts_2019.Areas.Identity.Pages.Account.Manage
 
         public static string TwoFactorAuthenticationNavClass(ViewContext viewContext) => PageNavClass(viewContext, TwoFactorAuthentication);
 
-        public static string MutualSettlementsNavClass(ViewContext viewContext) => PageNavClass(viewContext, MutualSettlements);
+        public static string MutualSettlementNavClass(ViewContext viewContext) => PageNavClass(viewContext, MutualSettlement);
 
         public static string PageNavClass(ViewContext viewContext, string page)
         {

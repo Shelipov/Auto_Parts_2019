@@ -35,7 +35,8 @@ namespace Auto_Parts_2019.Areas.Identity.Pages.Account
             var result = await _userManager.ConfirmEmailAsync(user, code);
             if (!result.Succeeded)
             {
-                throw new InvalidOperationException($"Ошибка подтверждения электронной почты для пользователя с идентификатором '{userId}':");
+                //throw new InvalidOperationException($"Ошибка подтверждения электронной почты для пользователя с идентификатором '{userId}':");
+                return RedirectToPage("/Index");
             }
 
             return Page();
